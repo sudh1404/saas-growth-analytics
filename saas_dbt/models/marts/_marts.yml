@@ -1,0 +1,286 @@
+version: 2
+
+models:
+  # ------------------------------------------------------------------ dimensions
+  - name: dim_accounts
+    description: >
+      Customer dimension. One row per signed-up account with acquisition attributes, funnel flags,
+      lifecycle status, churn details, revenue collected and payment health. Central table of the star schema.
+    columns:
+      - name: account_id
+        description: Primary key.
+        data_tests: [unique, not_null]
+      - name: acquisition_channel
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_channel')
+                field: channel
+      - name: is_activated
+        description: True if the account invited a teammate (the activation / "aha" moment).
+      - name: is_paying_customer
+        description: True if the account ever had a paid subscription.
+      - name: cohort_month
+        description: Month of the first payment; used for cohort retention.
+      - name: current_mrr
+        description: MRR on the active subscription at the snapshot date (0 if churned or never paid).
+        data_tests: [non_negative]
+      - name: lifecycle_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [never_paid, active, churned]
+      - name: churn_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [voluntary, involuntary]
+      - name: tenure_months
+        description: Whole months from first payment to churn date (or snapshot date if still active).
+        data_tests: [non_negative]
+      - name: revenue_to_date
+        description: Sum of successfully collected invoice amounts.
+        data_tests: [non_negative]
+    data_tests:
+      - expression_is_true:
+          arguments:
+            expression: "(lifecycle_status = 'never_paid') = (first_paid_date is null)"
+      - expression_is_true:
+          arguments:
+            expression: "(lifecycle_status = 'churned') = (churned_date is not null)"
+
+  - name: dim_plans
+    description: Subscription plan catalogue (Free, Starter $29, Pro $79, Business $199 per month).
+    columns:
+      - name: plan_id
+        data_tests: [unique, not_null]
+
+  - name: dim_channel
+    description: Acquisition channels with display name and paid/unpaid flag.
+    columns:
+      - name: channel
+        data_tests: [unique, not_null]
+      - name: channel_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Paid, Unpaid]
+
+  - name: dim_date
+    description: Daily calendar from 2024-01-01 to calendar_end_date (covers the forecast horizon). Mark as date table in Power BI.
+    columns:
+      - name: date
+        data_tests: [unique, not_null]
+
+  # ------------------------------------------------------------------ facts
+  - name: fct_mrr
+    description: >
+      Monthly MRR per paying account with the movement type explaining the month-over-month change.
+      Grain = account x month. Includes the churn month (mrr = 0) and excludes months after churn.
+    data_tests:
+      - unique_combination:
+          arguments:
+            combination_of_columns: [account_id, month]
+      - expression_is_true:
+          arguments:
+            expression: "abs(mrr - prev_mrr - mrr_change) < 0.001"
+    columns:
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_accounts')
+                field: account_id
+      - name: plan_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_plans')
+                field: plan_id
+      - name: mrr
+        description: MRR active at month end.
+        data_tests: [not_null, non_negative]
+      - name: movement_type
+        description: new | expansion | contraction | churn | reactivation | retained.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [new, reactivation, churn, expansion, contraction, retained]
+      - name: months_since_start
+        description: Months since the account's first paid month (cohort age).
+        data_tests: [non_negative]
+
+  - name: fct_funnel_steps
+    description: One row per account per funnel step reached (long format for the Power BI funnel visual).
+    data_tests:
+      - unique_combination:
+          arguments:
+            combination_of_columns: [account_id, step_order]
+    columns:
+      - name: account_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_accounts')
+                field: account_id
+      - name: step_order
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+
+  - name: fct_invoices
+    description: Monthly invoices with final collection status.
+    columns:
+      - name: invoice_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_accounts')
+                field: account_id
+
+  - name: fct_payments
+    description: Individual payment attempts including failures and dunning retries.
+    columns:
+      - name: payment_id
+        data_tests: [unique, not_null]
+      - name: invoice_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fct_invoices')
+                field: invoice_id
+
+  - name: fct_usage_monthly
+    description: Monthly active seats, sessions and sessions per seat per paying account.
+    columns:
+      - name: account_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_accounts')
+                field: account_id
+
+  - name: fct_product_events
+    description: De-duplicated product and funnel events.
+    columns:
+      - name: event_id
+        data_tests: [unique, not_null]
+
+  - name: fct_marketing_daily
+    description: Date x channel funnel inputs - visitors, pricing-page views, signups, impressions, clicks, spend, new paying customers.
+    data_tests:
+      - unique_combination:
+          arguments:
+            combination_of_columns: [date, channel]
+      - expression_is_true:
+          arguments:
+            expression: "channel in ('paid_search','paid_social','content','partner') or spend = 0"
+    columns:
+      - name: channel
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_channel')
+                field: channel
+      - name: spend
+        data_tests: [non_negative]
+
+  - name: fct_campaign_daily
+    description: Paid media at campaign grain with CPC and CTR.
+    data_tests:
+      - unique_combination:
+          arguments:
+            combination_of_columns: [date, channel, campaign]
+    columns:
+      - name: ctr
+        data_tests:
+          - between:
+              arguments:
+                min_value: 0
+                max_value: 1
+
+  # ------------------------------------------------------------------ aggregates
+  - name: agg_mrr_bridge_monthly
+    description: Company MRR bridge per month. Reconciliation is enforced by tests/assert_mrr_bridge_reconciles.sql.
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+      - name: new_mrr
+        data_tests: [non_negative]
+      - name: expansion_mrr
+        data_tests: [non_negative]
+
+  - name: agg_kpis_monthly
+    description: >
+      One row per month: customers, logo churn, MRR movements, MRR/ARR, growth, ARPA, ARPU, trailing-12-month
+      NRR and GRR, traffic, signups, marketing spend and CAC. See docs/metric_definitions.md.
+    data_tests:
+      - expression_is_true:
+          arguments:
+            expression: "abs(arr - 12 * mrr) < 0.01"
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+      - name: logo_churn_rate
+        data_tests:
+          - between:
+              arguments:
+                min_value: 0
+                max_value: 1
+      - name: grr_12m
+        data_tests:
+          - between:
+              arguments:
+                min_value: 0
+                max_value: 1
+
+  - name: agg_cohort_retention
+    description: Month 0-12 logo and revenue retention by first-payment cohort and acquisition channel.
+    data_tests:
+      - unique_combination:
+          arguments:
+            combination_of_columns: [cohort_month, acquisition_channel, months_since_start]
+      - expression_is_true:
+          arguments:
+            expression: "retained_customers <= cohort_customers"
+    columns:
+      - name: logo_retention
+        data_tests:
+          - between:
+              arguments:
+                min_value: 0
+                max_value: 1
+
+  - name: agg_channel_performance
+    description: Full-period unit economics per acquisition channel (CAC, ARPA, churn, LTV, LTV/CAC, payback).
+    columns:
+      - name: channel
+        data_tests: [unique, not_null]
+      - name: cac
+        description: NULL for unpaid channels (organic, referral) which have no attributable spend.
+
+  - name: agg_customer_segments
+    description: >
+      Segmentation of customers active at the snapshot by revenue quartile, plan, size, engagement tercile,
+      tenure band and a transparent rule-based risk score (complements the ML churn score).
+    columns:
+      - name: account_id
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_accounts')
+                field: account_id
+      - name: rule_based_risk
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Low, Medium, High]

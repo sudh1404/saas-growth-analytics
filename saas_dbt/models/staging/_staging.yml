@@ -1,0 +1,183 @@
+version: 2
+
+models:
+  - name: stg_accounts
+    description: One row per signed-up account, cleaned (channel casing, country aliases, missing values, whitespace).
+    columns:
+      - name: account_id
+        description: Primary key of an account (a company that signed up).
+        data_tests: [unique, not_null]
+      - name: signup_date
+        description: Date the account signed up (start of the 14-day trial).
+        data_tests: [not_null]
+      - name: acquisition_channel
+        description: Marketing channel that acquired the account (lower-cased).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [organic, paid_search, paid_social, referral, content, partner]
+      - name: country
+        description: Canonical country name; 'Unknown' when missing in the source.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [India, United States, United Kingdom, Germany, Brazil, Australia, Unknown]
+      - name: company_size
+        description: Employee band; 'Unknown' when missing.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['1-10', '11-50', '51-200', '201+', Unknown]
+      - name: customer_segment
+        description: SMB (1-50 employees), Mid-Market (51-200), Enterprise (201+), Unknown.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [SMB, Mid-Market, Enterprise, Unknown]
+      - name: pricing_page_variant
+        description: Pricing-page experiment arm (A = control, B = treatment). NULL outside the Jul-Sep 2025 test window.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [A, B]
+
+  - name: stg_events
+    description: Product/funnel events with double-fired tracking duplicates removed (same account, name and timestamp).
+    columns:
+      - name: event_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_accounts')
+                field: account_id
+      - name: event_name
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [signed_up, onboarding_completed, project_created, teammate_invited, subscription_started, support_ticket_opened]
+
+  - name: stg_plans
+    columns:
+      - name: plan_id
+        data_tests: [unique, not_null]
+      - name: plan_name
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Free, Starter, Pro, Business]
+
+  - name: stg_subscriptions
+    description: Subscription periods. A new row starts on every upgrade/downgrade; churn closes the last row.
+    columns:
+      - name: subscription_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_accounts')
+                field: account_id
+      - name: plan_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_plans')
+                field: plan_id
+      - name: mrr
+        data_tests: [not_null, non_negative]
+      - name: start_reason
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [new, upgrade, downgrade]
+      - name: end_reason
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [upgraded, downgraded, churned]
+      - name: churn_type
+        description: voluntary (customer decided to leave) or involuntary (payment failure after dunning).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [voluntary, involuntary]
+    data_tests:
+      - expression_is_true:
+          arguments:
+            expression: "end_date is null or end_date > start_date"
+
+  - name: stg_invoices
+    columns:
+      - name: invoice_id
+        data_tests: [unique, not_null]
+      - name: subscription_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_subscriptions')
+                field: subscription_id
+      - name: amount
+        data_tests: [not_null, non_negative]
+      - name: status
+        description: Final collection status after dunning retries.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [paid, failed]
+
+  - name: stg_payments
+    description: One row per payment attempt (attempt 1 = initial charge, 2-3 = dunning retries).
+    columns:
+      - name: payment_id
+        data_tests: [unique, not_null]
+      - name: invoice_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_invoices')
+                field: invoice_id
+      - name: attempt_number
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3]
+                quote: false
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [succeeded, failed]
+
+  - name: stg_usage_monthly
+    description: Monthly product usage per paying account. sessions is NULL during the Mar-2025 tracking outage.
+    data_tests:
+      - unique_combination:
+          arguments:
+            combination_of_columns: [account_id, usage_month]
+    columns:
+      - name: active_seats
+        data_tests: [not_null, non_negative]
+
+  - name: stg_marketing_spend
+    description: Paid media by day, channel and campaign with re-delivered duplicate rows removed.
+    data_tests:
+      - unique_combination:
+          arguments:
+            combination_of_columns: [spend_date, channel, campaign]
+    columns:
+      - name: spend
+        data_tests: [not_null, non_negative]
+
+  - name: stg_web_traffic
+    data_tests:
+      - unique_combination:
+          arguments:
+            combination_of_columns: [traffic_date, channel]
+    columns:
+      - name: visitors
+        data_tests: [not_null, non_negative]
