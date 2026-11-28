@@ -1,0 +1,40 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Secrets / local config (never commit)
+.env
+.env.*
+*.pem
+*.key
+credentials*.json
+
+# Generated data and warehouse (rebuilt by `python run_pipeline.py`)
+data/raw/*
+data/marts/*
+!data/raw/.gitkeep
+!data/marts/.gitkeep
+warehouse/*.duckdb
+warehouse/*.wal
+warehouse/*.tmp
+
+# dbt
+saas_dbt/target/
+saas_dbt/logs/
+saas_dbt/dbt_packages/
+saas_dbt/.user.yml
+logs/
+
+# Power BI local artefacts (PBIP: keep definitions, ignore caches and user settings)
+*.pbix.bak
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
