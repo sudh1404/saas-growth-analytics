@@ -1,0 +1,5 @@
+revenue_segment,customers,revenue_to_date,revenue_share_pct,avg_current_mrr,avg_tenure_months,customers_for_50pct_revenue,customers_for_80pct_revenue
+Q1 Top 25%,1059,2140871.0,64.5,140.4,14.8,670,1703
+Q2,1058,732835.0,22.1,88.4,10.3,670,1703
+Q3,1058,331885.0,10.0,53.6,7.2,670,1703
+Q4 Bottom 25%,1058,111033.0,3.3,46.4,1.8,670,1703

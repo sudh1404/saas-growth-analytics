@@ -1,0 +1,14 @@
+source,month,base_customers,start_mrr,end_mrr_same_customers,nrr_pct,grr_pct,churned_customers,expanded_customers,contracted_customers
+snapshot_check,2025-12-01,1857,148633.0,121929.0,82.0,69.0,526,220,106
+kpi_mart,2025-01-01,,,,93.8,78.9,,,
+kpi_mart,2025-02-01,,,,87.6,73.0,,,
+kpi_mart,2025-03-01,,,,88.4,72.5,,,
+kpi_mart,2025-04-01,,,,87.1,70.9,,,
+kpi_mart,2025-05-01,,,,87.9,70.3,,,
+kpi_mart,2025-06-01,,,,85.1,69.3,,,
+kpi_mart,2025-07-01,,,,85.8,70.3,,,
+kpi_mart,2025-08-01,,,,84.4,69.8,,,
+kpi_mart,2025-09-01,,,,85.6,70.8,,,
+kpi_mart,2025-10-01,,,,85.0,70.6,,,
+kpi_mart,2025-11-01,,,,82.3,69.2,,,
+kpi_mart,2025-12-01,,,,82.0,69.0,,,

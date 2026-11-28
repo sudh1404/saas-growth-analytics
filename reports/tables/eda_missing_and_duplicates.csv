@@ -1,0 +1,65 @@
+table,column,rows,missing,missing_pct
+accounts,account_id,27181,0,0.0
+accounts,signup_date,27181,0,0.0
+accounts,acquisition_channel,27181,0,0.0
+accounts,country,27181,260,0.009565505316213531
+accounts,company_size,27181,136,0.005003495088480924
+accounts,industry,27181,0,0.0
+accounts,pricing_page_variant,27181,22891,0.8421691622824767
+accounts,<exact duplicate rows>,27181,0,0.0
+events,event_id,88129,0,0.0
+events,account_id,88129,0,0.0
+events,event_name,88129,0,0.0
+events,event_ts,88129,0,0.0
+events,<exact duplicate rows>,88129,0,0.0
+invoices,invoice_id,48835,0,0.0
+invoices,account_id,48835,0,0.0
+invoices,subscription_id,48835,0,0.0
+invoices,invoice_date,48835,0,0.0
+invoices,due_date,48835,0,0.0
+invoices,amount,48835,0,0.0
+invoices,status,48835,0,0.0
+invoices,<exact duplicate rows>,48835,0,0.0
+marketing_spend,spend_date,6612,0,0.0
+marketing_spend,channel,6612,0,0.0
+marketing_spend,campaign,6612,0,0.0
+marketing_spend,impressions,6612,0,0.0
+marketing_spend,clicks,6612,0,0.0
+marketing_spend,spend,6612,0,0.0
+marketing_spend,<exact duplicate rows>,6612,33,0.004990925589836661
+payments,payment_id,53589,0,0.0
+payments,invoice_id,53589,0,0.0
+payments,account_id,53589,0,0.0
+payments,attempt_number,53589,0,0.0
+payments,attempted_at,53589,0,0.0
+payments,amount,53589,0,0.0
+payments,status,53589,0,0.0
+payments,failure_reason,53589,48042,0.896489951295975
+payments,<exact duplicate rows>,53589,0,0.0
+plans,plan_id,4,0,0.0
+plans,plan_name,4,0,0.0
+plans,monthly_price,4,0,0.0
+plans,plan_tier,4,0,0.0
+plans,max_seats,4,1,0.25
+plans,<exact duplicate rows>,4,0,0.0
+subscriptions,subscription_id,6698,0,0.0
+subscriptions,account_id,6698,0,0.0
+subscriptions,plan_id,6698,0,0.0
+subscriptions,start_date,6698,0,0.0
+subscriptions,end_date,6698,4233,0.631979695431472
+subscriptions,mrr,6698,0,0.0
+subscriptions,start_reason,6698,0,0.0
+subscriptions,end_reason,6698,4233,0.631979695431472
+subscriptions,churn_reason,6698,5392,0.80501642281278
+subscriptions,<exact duplicate rows>,6698,0,0.0
+usage_monthly,account_id,44602,0,0.0
+usage_monthly,usage_month,44602,0,0.0
+usage_monthly,active_seats,44602,0,0.0
+usage_monthly,sessions,44602,111,0.002488677637774091
+usage_monthly,<exact duplicate rows>,44602,0,0.0
+web_traffic,traffic_date,4386,0,0.0
+web_traffic,channel,4386,0,0.0
+web_traffic,visitors,4386,0,0.0
+web_traffic,sessions,4386,0,0.0
+web_traffic,pricing_page_views,4386,0,0.0
+web_traffic,<exact duplicate rows>,4386,0,0.0

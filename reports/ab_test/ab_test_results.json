@@ -1,0 +1,99 @@
+{
+  "sample": {
+    "n_A": 2141,
+    "n_B": 2149,
+    "srm_p_value": 0.9027873806953368,
+    "srm_ok": true,
+    "test_window": "2025-07-01 to 2025-09-30"
+  },
+  "primary": {
+    "conv_A": 0.19803829985987856,
+    "conv_B": 0.23452768729641693,
+    "abs_lift": 0.03648938743653837,
+    "abs_lift_ci95": [
+      0.011849800517896567,
+      0.06107658761923987
+    ],
+    "rel_lift": 0.1842541945793128,
+    "rel_lift_ci95_bootstrap": [
+      0.05524749311489778,
+      0.32583614643049025
+    ],
+    "z": 2.902344211841434,
+    "p_value": 0.0037038132798913577,
+    "significant": true,
+    "bayes_prob_B_better": 0.99806
+  },
+  "guardrails": [
+    {
+      "metric": "Avg starting MRR of converters",
+      "A": 75.62735849056604,
+      "B": 77.84920634920636,
+      "p_value": 0.577308847516274,
+      "worse_for_B": false,
+      "test": "Welch t-test",
+      "fails": false,
+      "status": "OK - no significant difference"
+    },
+    {
+      "metric": "Plan mix of converters (Starter/Pro/Business)",
+      "A": [
+        0.469,
+        0.363,
+        0.167
+      ],
+      "B": [
+        0.456,
+        0.363,
+        0.181
+      ],
+      "p_value": 0.8561865221526741,
+      "worse_for_B": false,
+      "test": "chi-square",
+      "fails": false,
+      "status": "OK - no significant difference"
+    },
+    {
+      "metric": "Activation rate (invited teammate)",
+      "A": 0.24614666043904718,
+      "B": 0.2591903210795719,
+      "p_value": 0.3256021352720415,
+      "worse_for_B": false,
+      "test": "two-proportion z",
+      "fails": false,
+      "status": "OK - no significant difference"
+    },
+    {
+      "metric": "60-day churn of converters",
+      "A": 0.06839622641509434,
+      "B": 0.03373015873015873,
+      "p_value": 0.015366904681975824,
+      "worse_for_B": false,
+      "test": "two-proportion z",
+      "fails": false,
+      "status": "OK - B better, but not significant after Bonferroni (p >= 0.0125); treat as noise"
+    }
+  ],
+  "power": {
+    "n_per_arm": 2141,
+    "achieved_power_observed_effect": 0.826942977981837,
+    "mde_abs_80pct_power": 0.035188858349638086,
+    "mde_rel_80pct_power": 0.1776871361475829,
+    "n_per_arm_needed_for_observed_lift": 1996.0,
+    "n_per_arm_needed_for_10pct_lift": 6589.0,
+    "signups_per_arm_per_week": 165.0,
+    "extra_weeks_for_observed_lift": 0.0
+  },
+  "impact": {
+    "monthly_signups_assumed": 1430.0,
+    "incremental_new_mrr_per_month_point": 4062.157888507596,
+    "ci95": [
+      1319.1715189719669,
+      6799.312337926089
+    ]
+  },
+  "decision": {
+    "recommendation": "SHIP",
+    "rationale": "conversion lift is statistically significant, the whole CI is positive and no guardrail is harmed"
+  }
+}

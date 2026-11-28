@@ -1,0 +1,145 @@
+{
+  "target": "churned within 3 months after a month-end cutoff",
+  "splits": {
+    "train": {
+      "rows": 16081,
+      "customers": 2796,
+      "churn_rate": 0.07891300292270381,
+      "cutoffs": "2024-06-30 .. 2025-03-31"
+    },
+    "validation": {
+      "rows": 8372,
+      "customers": 3127,
+      "churn_rate": 0.08146201624462494,
+      "cutoffs": "2025-04-30 .. 2025-06-30"
+    },
+    "test": {
+      "rows": 10227,
+      "customers": 3802,
+      "churn_rate": 0.08242886476972719,
+      "cutoffs": "2025-07-31 .. 2025-09-30"
+    }
+  },
+  "selected_model": "gradient_boosting",
+  "selection_metric": "validation PR-AUC",
+  "threshold": 0.22,
+  "validation": {
+    "baseline_majority": {
+      "pr_auc": 0.08146201624462494,
+      "roc_auc": 0.5,
+      "best_threshold": 0.08,
+      "net_value_at_threshold": 0.0
+    },
+    "logistic_regression": {
+      "pr_auc": 0.3053617668501435,
+      "roc_auc": 0.735856541419904,
+      "best_threshold": 0.32,
+      "net_value_at_threshold": 6646.399999999998
+    },
+    "gradient_boosting": {
+      "pr_auc": 0.3296593432308776,
+      "roc_auc": 0.7443661837554199,
+      "best_threshold": 0.22,
+      "net_value_at_threshold": 11725.599999999991
+    }
+  },
+  "test": {
+    "baseline_majority": {
+      "accuracy": 0.9175711352302728,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.08242886476972719,
+      "brier": 0.07564670830702856,
+      "threshold": 0.08,
+      "tp": 0,
+      "fp": 0,
+      "fn": 843,
+      "tn": 9384,
+      "flagged_pct": 0.0,
+      "net_value": 0.0
+    },
+    "logistic_regression": {
+      "accuracy": 0.9175711352302728,
+      "precision": 0.5,
+      "recall": 0.17793594306049823,
+      "f1": 0.26246719160104987,
+      "roc_auc": 0.7352781266717837,
+      "pr_auc": 0.3125700202908239,
+      "brier": 0.06668205206068482,
+      "threshold": 0.32,
+      "tp": 150,
+      "fp": 150,
+      "fn": 693,
+      "tn": 9234,
+      "flagged_pct": 0.02933411557641537,
+      "net_value": 8088.000000000004
+    },
+    "gradient_boosting": {
+      "accuracy": 0.9010462501222255,
+      "precision": 0.3639291465378422,
+      "recall": 0.2680901542111507,
+      "f1": 0.3087431693989071,
+      "roc_auc": 0.7438424632321339,
+      "pr_auc": 0.3221608917261087,
+      "brier": 0.06605119202447948,
+      "threshold": 0.22,
+      "tp": 226,
+      "fp": 395,
+      "fn": 617,
+      "tn": 8989,
+      "flagged_pct": 0.06072161924317982,
+      "net_value": 6537.5999999999985
+    }
+  },
+  "permutation_importance": {
+    "tickets_90d": 0.19907,
+    "sessions_per_seat_3m": 0.04381,
+    "failed_attempts_90d": 0.0341,
+    "mrr": 0.01979,
+    "tenure_months": 0.01634,
+    "acquisition_channel": 0.01154,
+    "usage_trend": 0.0091,
+    "failed_attempts_total": 0.00537,
+    "company_size": 0.00403,
+    "log_seats": 0.00254,
+    "is_activated": 0.00175,
+    "plan": 0.00013,
+    "upgrades": 5e-05,
+    "no_usage_history": 0.0,
+    "missing_usage_months": 0.0,
+    "downgrades": -1e-05,
+    "country": -0.00012,
+    "tickets_total": -0.00147
+  },
+  "assumptions": {
+    "outreach_cost": 40.0,
+    "save_rate": 0.25,
+    "gross_margin": 0.8,
+    "saved_months": 12
+  },
+  "scored_tiers": [
+    {
+      "risk_tier": "High",
+      "customers": 198,
+      "mrr": 13572.0,
+      "avg_probability": 0.34233240360949146,
+      "expected_mrr_loss": 4564.524994956772
+    },
+    {
+      "risk_tier": "Medium",
+      "customers": 706,
+      "mrr": 46614.0,
+      "avg_probability": 0.1266799565230932,
+      "expected_mrr_loss": 5985.612717844617
+    },
+    {
+      "risk_tier": "Low",
+      "customers": 3329,
+      "mrr": 287821.0,
+      "avg_probability": 0.04365857720411496,
+      "expected_mrr_loss": 11292.199734659544
+    }
+  ]
+}

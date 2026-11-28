@@ -1,0 +1,16 @@
+part,segment,sub_segment,customers,avg_mrr,churn_next_3m_pct
+current_mix,High,0-2 months,240,75.7,
+current_mix,High,12+ months,474,96.7,
+current_mix,High,3-5 months,263,81.9,
+current_mix,High,6-11 months,434,81.6,
+current_mix,Low,0-2 months,487,70.7,
+current_mix,Low,12+ months,345,83.4,
+current_mix,Low,3-5 months,233,77.1,
+current_mix,Low,6-11 months,346,76.8,
+current_mix,Medium,0-2 months,207,72.9,
+current_mix,Medium,12+ months,512,92.5,
+current_mix,Medium,3-5 months,285,81.5,
+current_mix,Medium,6-11 months,407,82.8,
+historical_churn_by_engagement,High,customers active Jun-2025,991,,4.9
+historical_churn_by_engagement,Low,customers active Jun-2025,991,,11.5
+historical_churn_by_engagement,Medium,customers active Jun-2025,991,,7.3

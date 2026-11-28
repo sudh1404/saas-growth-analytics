@@ -1,0 +1,7 @@
+channel,new_customers,spend,cac,arpa,monthly_logo_churn_pct,expected_lifetime_months,ltv,ltv_to_cac,cac_payback_months,ltv_cac_assessment
+content,538.0,127965.0,238.0,83.48,3.19,31.4,2094.0,8.8,3.6,healthy (>=3x)
+paid_social,735.0,289371.0,394.0,81.32,3.65,27.4,1784.0,4.53,6.1,healthy (>=3x)
+paid_search,1365.0,664842.0,487.0,77.11,2.98,33.5,2069.0,4.25,7.9,healthy (>=3x)
+partner,437.0,339078.0,776.0,81.73,2.39,41.8,2733.0,3.52,11.9,healthy (>=3x)
+organic,1700.0,,,82.47,2.86,35.0,2309.0,,,no paid spend
+referral,764.0,,,76.65,2.46,40.7,2498.0,,,no paid spend

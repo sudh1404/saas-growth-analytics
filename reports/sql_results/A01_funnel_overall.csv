@@ -1,0 +1,7 @@
+stage_order,stage,accounts,dropped_from_previous,step_conversion_pct,step_drop_off_pct,pct_of_signups,pct_of_visitors
+0,Website visitors,928479.0,,,,,100.0
+1,Signed up,26538.0,901941.0,2.86,97.14,100.0,2.858
+2,Onboarded,19026.0,7512.0,71.69,28.31,71.69,2.049
+3,Created project,13307.0,5719.0,69.94,30.06,50.14,1.433
+4,Activated (invited teammate),6793.0,6514.0,51.05,48.95,25.6,0.732
+5,Became paying (any path),5539.0,1254.0,81.54,18.46,20.87,0.597

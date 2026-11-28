@@ -1,0 +1,7 @@
+acquisition_channel,visitors,signups,visit_to_signup_pct,signup_to_onboarded_pct,onboarded_to_activated_pct,activated_to_paid_pct,pct_payers_never_activated,signup_to_paid_pct,visit_to_paid_pct,rank_signup_to_paid
+referral,46207.0,3279,7.1,81.7,35.4,46.6,42.1,23.3,1.653,1
+organic,324941.0,7947,2.45,71.8,35.6,47.1,43.7,21.4,0.523,2
+partner,42550.0,2114,4.97,72.0,36.4,43.4,44.9,20.7,1.027,3
+paid_search,167441.0,6617,3.95,71.8,36.2,43.1,45.6,20.6,0.815,4
+content,123086.0,2611,2.12,72.7,35.0,46.5,42.6,20.6,0.437,5
+paid_social,224254.0,3970,1.77,62.2,35.5,44.0,47.6,18.5,0.328,6

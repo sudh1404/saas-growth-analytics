@@ -1,0 +1,7 @@
+channel,channel_type,new_customers,current_mrr,share_of_mrr_pct,revenue_collected_to_date,spend,revenue_to_spend_ratio,arr_per_dollar_spent
+organic,Unpaid,1700.0,111650.0,32.1,1215112.0,,,
+paid_search,Paid,1365.0,81512.0,23.4,911340.0,664842.0,1.37,1.47
+referral,Unpaid,764.0,47922.0,13.8,523592.0,,,
+paid_social,Paid,735.0,42329.0,12.2,510774.0,289371.0,1.77,1.76
+content,Paid,538.0,34995.0,10.1,376780.0,127965.0,2.94,3.28
+partner,Paid,437.0,29599.0,8.5,317410.0,339078.0,0.94,1.05

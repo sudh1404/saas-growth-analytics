@@ -1,0 +1,10 @@
+channel,campaign,spend,cpm,cpc,ctr_pct,signups_attributed,cost_per_signup,customers_attributed,cost_per_customer,efficiency_rank
+content,content_seo_articles,75239.0,16.83,0.85,1.98,1878.0,40.1,377.0,200.0,1
+paid_social,social_meta,93309.0,8.86,0.9,0.98,1837.0,50.8,332.0,281.0,2
+content,content_webinars,52726.0,41.5,1.4,2.97,800.0,65.9,161.0,327.0,3
+paid_search,search_brand,156799.0,206.09,2.61,7.91,2376.0,66.0,478.0,328.0,4
+paid_social,social_linkedin,196063.0,9.28,1.55,0.6,2239.0,87.6,403.0,486.0,5
+paid_search,search_generic,369180.0,148.02,4.29,3.45,3396.0,108.7,683.0,541.0,6
+paid_search,search_competitor,138864.0,134.71,5.43,2.48,1010.0,137.4,204.0,681.0,7
+partner,partner_resellers,188012.0,356.9,7.24,4.93,1291.0,145.6,263.0,715.0,8
+partner,partner_marketplace,151066.0,343.36,8.73,3.93,860.0,175.7,174.0,867.0,9
