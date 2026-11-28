@@ -1,0 +1,60 @@
+table dim_plans
+	lineageTag: 2e956006-3ab6-4e07-a6f7-281249776f1d
+
+	column plan_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c132f866-8306-4128-85aa-7f5729b3529a
+		summarizeBy: none
+		sourceColumn: plan_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column plan_name
+		dataType: string
+		lineageTag: 8bff78c0-88fb-43f2-9afd-1c47dcfe8058
+		summarizeBy: none
+		sourceColumn: plan_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column monthly_price
+		dataType: double
+		lineageTag: 4b9a5461-c638-4880-a4a1-07e51661e4f4
+		summarizeBy: none
+		sourceColumn: monthly_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column plan_tier
+		dataType: int64
+		formatString: 0
+		lineageTag: 06ae6108-a1ec-4d63-b3d4-1a452cff4322
+		summarizeBy: none
+		sourceColumn: plan_tier
+
+		annotation SummarizationSetBy = Automatic
+
+	column max_seats
+		dataType: int64
+		formatString: 0
+		lineageTag: 90556633-2e93-4e46-89f6-827ddd9df0f8
+		summarizeBy: none
+		sourceColumn: max_seats
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_plans = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "dim_plans.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

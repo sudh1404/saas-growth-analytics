@@ -1,0 +1,63 @@
+table fct_usage_monthly
+	lineageTag: 9d0bc65b-fd67-4d75-9b45-d4740c4028d6
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: bc0c80d5-d5bf-450e-9cc4-63d24995df6e
+		summarizeBy: none
+		sourceColumn: account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column usage_month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 001bc190-1557-4086-96b8-0cfd7384f259
+		summarizeBy: none
+		sourceColumn: usage_month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column active_seats
+		dataType: int64
+		formatString: 0
+		lineageTag: eeda83e4-93b1-4557-acec-ce03e493b42f
+		summarizeBy: sum
+		sourceColumn: active_seats
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions
+		dataType: int64
+		formatString: 0
+		lineageTag: 7d5ccf2b-6de4-45bd-9e0d-2024142ca85b
+		summarizeBy: sum
+		sourceColumn: sessions
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions_per_seat
+		dataType: double
+		lineageTag: 136df0af-c3aa-41b2-9f8c-f187326261ac
+		summarizeBy: sum
+		sourceColumn: sessions_per_seat
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fct_usage_monthly = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fct_usage_monthly.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

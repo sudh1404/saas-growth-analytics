@@ -1,0 +1,7 @@
+expression DataFolder = "C:\Users\sudha\Downloads\clouddesk_powerbi_data\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 5be0d2b5-7545-4edd-9a19-49088e4772e0
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

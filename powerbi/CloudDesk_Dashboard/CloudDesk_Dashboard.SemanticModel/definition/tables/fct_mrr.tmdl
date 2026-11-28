@@ -1,0 +1,125 @@
+table fct_mrr
+	lineageTag: 2ebb2ecf-ea04-4ba0-8e98-d8c98ee25a54
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 0de3b312-280d-495f-8be0-76d08297d365
+		summarizeBy: none
+		sourceColumn: account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1478a222-650c-41d2-8831-198f7388771e
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column plan_id
+		dataType: int64
+		formatString: 0
+		lineageTag: a7de9412-b2ee-4ba3-9ded-b748d5f7cdb6
+		summarizeBy: none
+		sourceColumn: plan_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column mrr
+		dataType: double
+		lineageTag: 04188ebd-a128-4f28-a6a8-a2a20ddc729b
+		summarizeBy: sum
+		sourceColumn: mrr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column prev_mrr
+		dataType: double
+		lineageTag: 2c45c5d7-129c-48ed-b0af-8feb48fbc8f3
+		summarizeBy: sum
+		sourceColumn: prev_mrr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column mrr_change
+		dataType: double
+		lineageTag: 433ef440-3bb3-4a82-9213-2e9d721e2774
+		summarizeBy: sum
+		sourceColumn: mrr_change
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column movement_type
+		dataType: string
+		lineageTag: 952b7e2e-28f6-44fe-94e0-d28183219b7e
+		summarizeBy: none
+		sourceColumn: movement_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ed8c36d7-a539-49fb-be0f-45601bca6e1f
+		summarizeBy: none
+		sourceColumn: cohort_month
+
+		variation Variation
+			isDefault
+			relationship: 8007d507-9d65-4808-b648-054818834a7f
+			defaultHierarchy: LocalDateTable_c0d1b336-c92f-42ea-b932-838d8603f426.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column months_since_start
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c5adba4-b307-47af-82f5-7a7dd7e230dc
+		summarizeBy: sum
+		sourceColumn: months_since_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 07de2482-491e-4139-9547-1c2eb34ff305
+		summarizeBy: none
+		sourceColumn: is_active
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_seats
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f096bc6-45c9-473d-b6a1-f3ff9e9d819a
+		summarizeBy: sum
+		sourceColumn: active_seats
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fct_mrr = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fct_mrr.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

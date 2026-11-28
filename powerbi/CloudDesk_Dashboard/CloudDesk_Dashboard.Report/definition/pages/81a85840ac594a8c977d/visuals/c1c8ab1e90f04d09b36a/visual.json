@@ -1,0 +1,275 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "c1c8ab1e90f04d09b36a",
+  "position": {
+    "x": 1280,
+    "y": 692,
+    "z": 17000,
+    "height": 365,
+    "width": 616,
+    "tabOrder": 17000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_channel"
+                    }
+                  },
+                  "Property": "channel_name"
+                }
+              },
+              "queryRef": "dim_channel.channel_name",
+              "nativeQueryRef": "channel",
+              "displayName": "channel"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Visitors"
+                }
+              },
+              "queryRef": "_Measures.Visitors",
+              "nativeQueryRef": "Visitors"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Visit to Signup %"
+                }
+              },
+              "queryRef": "_Measures.Visit to Signup %",
+              "nativeQueryRef": "Visit to Signup %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Signups"
+                }
+              },
+              "queryRef": "_Measures.Total Signups",
+              "nativeQueryRef": "Total Signups"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Overall Conversion Rate"
+                }
+              },
+              "queryRef": "_Measures.Overall Conversion Rate",
+              "nativeQueryRef": "Overall Conversion Rate"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Marketing Spend"
+                }
+              },
+              "queryRef": "_Measures.Marketing Spend",
+              "nativeQueryRef": "Marketing Spend"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "CAC"
+                }
+              },
+              "queryRef": "_Measures.CAC",
+              "nativeQueryRef": "CAC"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "LTV/CAC"
+                }
+              },
+              "queryRef": "_Measures.LTV/CAC",
+              "nativeQueryRef": "LTV/CAC"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Channel performance comparison'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "252e609b1cc31885d73b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_channel"
+              }
+            },
+            "Property": "channel_name"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "efaa6aedca87e083a582",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Visitors"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "e55750c87075144bb03e",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Visit to Signup %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "f3e358ca8e428bab2d52",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Total Signups"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "221a288d482115f70072",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Overall Conversion Rate"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "68466a3a163d05372f4b",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Marketing Spend"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1a3c883c7278c4f428e0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "CAC"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "4f22d9c7aa111a9c166a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "LTV/CAC"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

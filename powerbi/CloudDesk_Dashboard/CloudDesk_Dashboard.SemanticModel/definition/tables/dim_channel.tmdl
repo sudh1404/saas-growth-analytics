@@ -1,0 +1,48 @@
+table dim_channel
+	lineageTag: e97b27e9-0e77-48b7-ade9-6ed55554e08f
+
+	column channel
+		dataType: string
+		lineageTag: 7a74aef7-263e-455b-86cf-663d69af9371
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_name
+		dataType: string
+		lineageTag: 2364df59-bc6a-438d-a662-b2115f6e1172
+		summarizeBy: none
+		sourceColumn: channel_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_type
+		dataType: string
+		lineageTag: 0b779642-aed5-4281-bf25-16ca090175db
+		summarizeBy: none
+		sourceColumn: channel_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_paid
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e3ef8de4-4633-4b86-ba7f-ab6e72249b06
+		summarizeBy: none
+		sourceColumn: is_paid
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_channel = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "dim_channel.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

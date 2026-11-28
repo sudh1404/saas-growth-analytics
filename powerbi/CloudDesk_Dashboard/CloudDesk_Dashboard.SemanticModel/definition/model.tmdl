@@ -1,0 +1,46 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["DataFolder","fct_mrr","dim_accounts","dim_plans","dim_channel","dim_date","fct_funnel_steps","fct_marketing_daily","fct_campaign_daily","fct_usage_monthly","fct_invoices","agg_channel_performance","churn_scores","mrr_forecast","ab_test_summary","_Measures"]
+
+annotation PBI_ProTooling = ["DaxQueryView_Desktop","DevMode"]
+
+ref table fct_mrr
+ref table DateTableTemplate_85ea93b5-d023-48f0-a251-4f3b331ccfc4
+ref table LocalDateTable_c0d1b336-c92f-42ea-b932-838d8603f426
+ref table dim_accounts
+ref table LocalDateTable_2878903a-4394-47fa-915b-ef51046e7753
+ref table LocalDateTable_7ab7d0ea-1dd5-48ad-9d4c-029c09b0f9d2
+ref table LocalDateTable_28cb8f7b-b51a-4850-8700-f15caeaf401f
+ref table LocalDateTable_de3aa167-a786-45fa-8158-930c67728b12
+ref table dim_plans
+ref table dim_channel
+ref table dim_date
+ref table LocalDateTable_9012c3d6-46e7-456f-b603-4fc6aedf4a9c
+ref table LocalDateTable_ec11ce2b-8568-4f0d-a581-55a9d695e7e8
+ref table fct_funnel_steps
+ref table LocalDateTable_3eb7efd1-9449-4943-b72d-26a0c4184359
+ref table fct_marketing_daily
+ref table fct_campaign_daily
+ref table fct_usage_monthly
+ref table fct_invoices
+ref table LocalDateTable_00946d91-5a1d-4ac1-8d88-57caa865ec58
+ref table LocalDateTable_fbf93765-7cc7-4e9c-a380-d0e88089d219
+ref table LocalDateTable_347282d3-7ac2-4948-9ca9-6dc40be02ad7
+ref table agg_channel_performance
+ref table churn_scores
+ref table LocalDateTable_09d4a749-ed1e-4ddb-8801-ee9f49eeed36
+ref table mrr_forecast
+ref table ab_test_summary
+ref table _Measures
+
+ref cultureInfo en-US
+

@@ -1,0 +1,90 @@
+table mrr_forecast
+	lineageTag: d2641399-cf38-47cf-825a-4ea74e66dad2
+
+	column month
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0b11f041-521e-4dde-aabc-1631e8c41856
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column series
+		dataType: string
+		lineageTag: e51e41fb-507d-40a4-831c-26f9f37d6ccc
+		summarizeBy: none
+		sourceColumn: series
+
+		annotation SummarizationSetBy = Automatic
+
+	column mrr
+		dataType: double
+		lineageTag: 4af6bc51-4e10-4eb5-9610-e195138b5a91
+		summarizeBy: sum
+		sourceColumn: mrr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lower_80
+		dataType: double
+		lineageTag: 95b58cb2-f278-42de-99d2-6f761f99ac3d
+		summarizeBy: sum
+		sourceColumn: lower_80
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column upper_80
+		dataType: double
+		lineageTag: 741754df-4165-4ac6-8a44-4cdb112dd66c
+		summarizeBy: sum
+		sourceColumn: upper_80
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lower_95
+		dataType: double
+		lineageTag: b65250e8-9068-44ba-aa76-8f8bbf715385
+		summarizeBy: sum
+		sourceColumn: lower_95
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column upper_95
+		dataType: double
+		lineageTag: 054c64dc-7f92-40b6-b978-ce396ab76efd
+		summarizeBy: sum
+		sourceColumn: upper_95
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column model
+		dataType: string
+		lineageTag: 6fe555da-ca7b-4a5c-b92e-7bf1849d8cac
+		summarizeBy: none
+		sourceColumn: model
+
+		annotation SummarizationSetBy = Automatic
+
+	partition mrr_forecast = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "mrr_forecast.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

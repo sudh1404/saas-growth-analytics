@@ -1,0 +1,181 @@
+table agg_channel_performance
+	lineageTag: de1c4b98-4215-4059-9daa-d32f0f8d94d2
+
+	column channel
+		dataType: string
+		lineageTag: 03ce662f-6efc-4dbd-b70f-9bb962ae01d5
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_type
+		dataType: string
+		lineageTag: b973c9f2-bc5c-4736-9db6-33e8e0283fcb
+		summarizeBy: none
+		sourceColumn: channel_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column visitors
+		dataType: double
+		lineageTag: aec54ef8-d441-41e2-8038-6fce1353f5e4
+		summarizeBy: sum
+		sourceColumn: visitors
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column signups
+		dataType: double
+		lineageTag: 98b7a2db-b114-417d-894e-36d5bc8d143a
+		summarizeBy: sum
+		sourceColumn: signups
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column new_customers
+		dataType: double
+		lineageTag: e3b0eb0d-e14e-4f3c-aff8-7accd9381f3a
+		summarizeBy: sum
+		sourceColumn: new_customers
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column visit_to_signup_rate
+		dataType: double
+		lineageTag: 328a5508-233a-48e4-97f3-8361a6771c85
+		summarizeBy: sum
+		sourceColumn: visit_to_signup_rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column signup_to_paid_rate
+		dataType: double
+		lineageTag: 507e2b48-c540-4937-a999-121489c43c92
+		summarizeBy: sum
+		sourceColumn: signup_to_paid_rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column spend
+		dataType: double
+		lineageTag: ee29a99a-d5de-48e0-a093-3ace2354d6b8
+		summarizeBy: sum
+		sourceColumn: spend
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cac
+		dataType: double
+		lineageTag: 6eb5e676-cfaf-4093-a64c-8c8ce964aaaf
+		summarizeBy: sum
+		sourceColumn: cac
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column arpa
+		dataType: double
+		lineageTag: d5cc6d6b-acd8-4e33-96ea-5ca295ae3b0d
+		summarizeBy: sum
+		sourceColumn: arpa
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column monthly_logo_churn
+		dataType: double
+		lineageTag: 1b301aef-b8cf-4e8f-83e6-b76cbd38b897
+		summarizeBy: sum
+		sourceColumn: monthly_logo_churn
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gross_margin
+		dataType: double
+		lineageTag: c13f7cdb-19ca-43cc-a012-ec1a5a759de9
+		summarizeBy: sum
+		sourceColumn: gross_margin
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column current_mrr
+		dataType: double
+		lineageTag: 40c22a00-ef65-4077-aaee-72253200a288
+		summarizeBy: sum
+		sourceColumn: current_mrr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ltv
+		dataType: double
+		lineageTag: 937a328c-d4e3-4cec-aa01-ab1207879d54
+		summarizeBy: sum
+		sourceColumn: ltv
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ltv_to_cac
+		dataType: double
+		lineageTag: 36b1d592-aa00-4c8f-8609-386581e1d7ee
+		summarizeBy: sum
+		sourceColumn: ltv_to_cac
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cac_payback_months
+		dataType: double
+		lineageTag: 29a50ed5-ef3d-4aa4-9f07-614e85f4631e
+		summarizeBy: sum
+		sourceColumn: cac_payback_months
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column share_of_current_mrr
+		dataType: double
+		lineageTag: 2f9ff56a-4895-4711-befe-8468e066754e
+		summarizeBy: sum
+		sourceColumn: share_of_current_mrr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition agg_channel_performance = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "agg_channel_performance.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

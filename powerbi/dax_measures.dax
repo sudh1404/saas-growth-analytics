@@ -1,0 +1,223 @@
+// =====================================================================================================
+// CloudDesk SaaS Growth Analytics - DAX measures (fictional company, synthetic data)
+//
+// HOW TO LOAD ALL MEASURES AT ONCE (Power BI Desktop, DAX query view):
+//   1. Create an empty measure table: Home > Enter data > name it  _Measures  > Load.
+//   2. Open DAX query view, paste this whole file, click Run.
+//   3. Click "Update model: Add N new measures" (CodeLens above the DEFINE block).
+//   4. The EVALUATE at the bottom returns the headline KPIs: compare them with powerbi/validation_targets.csv.
+//   Then hide the dummy column of _Measures and set formats (format hints are in the comments).
+//
+// Model assumptions (see powerbi/data_model.md):
+//   dim_date[date] 1-* fct_mrr[month], fct_marketing_daily[date], fct_campaign_daily[date],
+//                      fct_usage_monthly[usage_month], mrr_forecast[month]          (active)
+//   dim_date[date] 1-* dim_accounts[signup_date]                                      (INACTIVE - used via USERELATIONSHIP)
+//   dim_accounts[account_id] 1-* fct_mrr, fct_funnel_steps, fct_usage_monthly, fct_invoices, churn_scores
+//   dim_plans[plan_id] 1-* fct_mrr[plan_id];  dim_channel[channel] 1-* dim_accounts[acquisition_channel],
+//                                             fct_marketing_daily[channel], fct_campaign_daily[channel]
+// =====================================================================================================
+DEFINE
+    // ------------------------------------------------------------------ 1. Recurring revenue
+    // MRR at the END of the latest month in the current filter context.   Format: $#,0
+    MEASURE '_Measures'[MRR] =
+        VAR _m = MAX ( fct_mrr[month] )
+        RETURN CALCULATE ( SUM ( fct_mrr[mrr] ), fct_mrr[month] = _m )
+
+    // Format: $#,0
+    MEASURE '_Measures'[ARR] = [MRR] * 12
+
+    // MRR one month before the latest month in context.   Format: $#,0
+    MEASURE '_Measures'[MRR Previous Month] =
+        VAR _m = MAX ( fct_mrr[month] )
+        RETURN CALCULATE ( SUM ( fct_mrr[mrr] ), REMOVEFILTERS ( dim_date ), fct_mrr[month] = EDATE ( _m, -1 ) )
+
+    // Month-over-month MRR growth.   Format: 0.0%
+    MEASURE '_Measures'[MRR Growth %] =
+        DIVIDE ( [MRR] - [MRR Previous Month], [MRR Previous Month] )
+
+    // ------------------------------------------------------------------ 2. MRR bridge (sum over the months in context)
+    // MRR at the start of the first month in context.   Format: $#,0
+    MEASURE '_Measures'[Opening MRR] =
+        VAR _first = MIN ( fct_mrr[month] )
+        RETURN CALCULATE ( SUM ( fct_mrr[prev_mrr] ), fct_mrr[month] = _first )
+
+    MEASURE '_Measures'[New MRR] = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "new" )
+    MEASURE '_Measures'[Expansion MRR] = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "expansion" )
+    MEASURE '_Measures'[Reactivation MRR] = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "reactivation" )
+    // negative numbers
+    MEASURE '_Measures'[Contraction MRR] = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "contraction" )
+    MEASURE '_Measures'[Churned MRR] = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "churn" )
+    // = New + Expansion + Reactivation + Contraction + Churned.  Opening + Net New = Closing (MRR).
+    MEASURE '_Measures'[Net New MRR] = SUM ( fct_mrr[mrr_change] )
+    // Positive version for "expansion vs contraction" visuals.   Format: $#,0
+    MEASURE '_Measures'[Lost MRR (Churn + Contraction)] = - ( [Churned MRR] + [Contraction MRR] )
+
+    // ------------------------------------------------------------------ 3. Customers
+    // Paying customers at the end of the latest month in context.   Format: #,0
+    MEASURE '_Measures'[Active Customers] =
+        VAR _m = MAX ( fct_mrr[month] )
+        RETURN CALCULATE ( DISTINCTCOUNT ( fct_mrr[account_id] ), fct_mrr[month] = _m, fct_mrr[is_active] = TRUE () )
+
+    // Customers who have ever paid, up to the latest month in context.   Format: #,0
+    MEASURE '_Measures'[Total Customers] =
+        VAR _m = MAX ( fct_mrr[month] )
+        RETURN CALCULATE ( DISTINCTCOUNT ( fct_mrr[account_id] ), REMOVEFILTERS ( dim_date ), fct_mrr[month] <= _m )
+
+    MEASURE '_Measures'[New Customers] = CALCULATE ( COUNTROWS ( fct_mrr ), fct_mrr[movement_type] = "new" )
+    MEASURE '_Measures'[Churned Customers] = CALCULATE ( COUNTROWS ( fct_mrr ), fct_mrr[movement_type] = "churn" )
+    // customer-months exposed to churn (customer was paying at the start of the month)
+    MEASURE '_Measures'[Customer Months at Risk] = CALCULATE ( COUNTROWS ( fct_mrr ), fct_mrr[prev_mrr] > 0 )
+
+    // Average MONTHLY logo churn over the months in context.   Format: 0.00%
+    MEASURE '_Measures'[Customer Churn Rate] = DIVIDE ( [Churned Customers], [Customer Months at Risk] )
+    // Format: 0.00%
+    MEASURE '_Measures'[Customer Retention Rate] = 1 - [Customer Churn Rate]
+
+    // ------------------------------------------------------------------ 4. Per-account revenue
+    // Format: $#,0.00
+    MEASURE '_Measures'[ARPA] = DIVIDE ( [MRR], [Active Customers] )
+
+    // MRR per active seat (accounts without usage data yet are excluded).   Format: $#,0.00
+    MEASURE '_Measures'[ARPU] =
+        VAR _m = MAX ( fct_mrr[month] )
+        VAR _mrr = CALCULATE ( SUM ( fct_mrr[mrr] ), fct_mrr[month] = _m, fct_mrr[is_active] = TRUE (), NOT ISBLANK ( fct_mrr[active_seats] ) )
+        VAR _seats = CALCULATE ( SUM ( fct_mrr[active_seats] ), fct_mrr[month] = _m, fct_mrr[is_active] = TRUE () )
+        RETURN DIVIDE ( _mrr, _seats )
+
+    // ------------------------------------------------------------------ 5. Revenue retention (trailing 12 months)
+    // Base = accounts paying 12 months before the latest month in context.   Format: 0.0%
+    MEASURE '_Measures'[NRR] =
+        VAR _cur = MAX ( fct_mrr[month] )
+        VAR _base = EDATE ( _cur, -12 )
+        VAR _t =
+            CALCULATETABLE (
+                ADDCOLUMNS (
+                    VALUES ( fct_mrr[account_id] ),
+                    "@m0", CALCULATE ( SUM ( fct_mrr[mrr] ) ),
+                    "@m1", CALCULATE ( SUM ( fct_mrr[mrr] ), fct_mrr[month] = _cur )
+                ),
+                REMOVEFILTERS ( dim_date ),
+                fct_mrr[month] = _base,
+                fct_mrr[mrr] > 0
+            )
+        RETURN DIVIDE ( SUMX ( _t, [@m1] ), SUMX ( _t, [@m0] ) )
+
+    // Same base, each account capped at its starting MRR (expansion excluded).   Format: 0.0%
+    MEASURE '_Measures'[GRR] =
+        VAR _cur = MAX ( fct_mrr[month] )
+        VAR _base = EDATE ( _cur, -12 )
+        VAR _t =
+            CALCULATETABLE (
+                ADDCOLUMNS (
+                    VALUES ( fct_mrr[account_id] ),
+                    "@m0", CALCULATE ( SUM ( fct_mrr[mrr] ) ),
+                    "@m1", CALCULATE ( SUM ( fct_mrr[mrr] ), fct_mrr[month] = _cur )
+                ),
+                REMOVEFILTERS ( dim_date ),
+                fct_mrr[month] = _base,
+                fct_mrr[mrr] > 0
+            )
+        RETURN DIVIDE ( SUMX ( _t, MIN ( COALESCE ( [@m1], 0 ), [@m0] ) ), SUMX ( _t, [@m0] ) )
+
+    // ------------------------------------------------------------------ 6. Acquisition funnel (by SIGNUP date)
+    // Accounts that signed up in the dates in context.   Format: #,0
+    MEASURE '_Measures'[Total Signups] =
+        CALCULATE ( COUNTROWS ( dim_accounts ), USERELATIONSHIP ( dim_date[date], dim_accounts[signup_date] ) )
+    MEASURE '_Measures'[Onboarded Accounts] = CALCULATE ( [Total Signups], dim_accounts[is_onboarded] = TRUE () )
+    MEASURE '_Measures'[Activated Customers] = CALCULATE ( [Total Signups], dim_accounts[is_activated] = TRUE () )
+    MEASURE '_Measures'[Paying Customers] = CALCULATE ( [Total Signups], dim_accounts[is_paying_customer] = TRUE () )
+    // Format: 0.0%
+    MEASURE '_Measures'[Overall Conversion Rate] = DIVIDE ( [Paying Customers], [Total Signups] )
+    MEASURE '_Measures'[Activation Rate] = DIVIDE ( [Activated Customers], [Total Signups] )
+    MEASURE '_Measures'[Activated to Paid %] =
+        DIVIDE ( CALCULATE ( [Paying Customers], dim_accounts[is_activated] = TRUE () ), [Activated Customers] )
+
+    // For the funnel visual (Category = fct_funnel_steps[step_name], sorted by step_order).   Format: #,0
+    MEASURE '_Measures'[Funnel Accounts] =
+        CALCULATE ( DISTINCTCOUNT ( fct_funnel_steps[account_id] ), USERELATIONSHIP ( dim_date[date], dim_accounts[signup_date] ) )
+    // Conversion from the previous step.   Format: 0.0%
+    MEASURE '_Measures'[Step Conversion %] =
+        VAR _s = SELECTEDVALUE ( fct_funnel_steps[step_order] )
+        VAR _prev = CALCULATE ( [Funnel Accounts], REMOVEFILTERS ( fct_funnel_steps[step_name], fct_funnel_steps[step_order] ),
+                                fct_funnel_steps[step_order] = _s - 1 )
+        RETURN IF ( _s > 1, DIVIDE ( [Funnel Accounts], _prev ) )
+    // Format: 0.0%
+    MEASURE '_Measures'[Step Drop-off %] = IF ( NOT ISBLANK ( [Step Conversion %] ), 1 - [Step Conversion %] )
+
+    // Website traffic (channel x day; not available by country / size / plan).   Format: #,0
+    MEASURE '_Measures'[Visitors] = SUM ( fct_marketing_daily[visitors] )
+    MEASURE '_Measures'[Visit to Signup %] = DIVIDE ( SUM ( fct_marketing_daily[signups] ), [Visitors] )
+
+    // ------------------------------------------------------------------ 7. Marketing & unit economics
+    // Spend and acquisitions are tracked by channel x date only, so country / size / plan slicers do not change CAC.
+    MEASURE '_Measures'[Marketing Spend] = SUM ( fct_marketing_daily[spend] )
+    // New paying customers attributed on their first payment date.   Format: #,0
+    MEASURE '_Measures'[New Customers Acquired] = SUM ( fct_marketing_daily[new_customers] )
+    // CAC over paid channels.   Format: $#,0
+    MEASURE '_Measures'[CAC] =
+        DIVIDE ( [Marketing Spend], CALCULATE ( [New Customers Acquired], dim_channel[is_paid] = TRUE () ) )
+    // All spend over all new customers incl. organic and referral.   Format: $#,0
+    MEASURE '_Measures'[Blended CAC] = DIVIDE ( [Marketing Spend], [New Customers Acquired] )
+    MEASURE '_Measures'[Gross Margin] = 0.80
+    // Average MRR of an active account-month in context.   Format: $#,0.00
+    MEASURE '_Measures'[ARPA (avg active month)] = CALCULATE ( AVERAGE ( fct_mrr[mrr] ), fct_mrr[is_active] = TRUE () )
+    // LTV = ARPA x gross margin / monthly logo churn (steady-state, undiscounted).   Format: $#,0
+    MEASURE '_Measures'[LTV] = DIVIDE ( [ARPA (avg active month)] * [Gross Margin], [Customer Churn Rate] )
+    // Format: 0.0"x"
+    MEASURE '_Measures'[LTV/CAC] = DIVIDE ( [LTV], [CAC] )
+    // Months of gross margin needed to recover CAC.   Format: 0.0
+    MEASURE '_Measures'[CAC Payback (months)] = DIVIDE ( [CAC], [ARPA (avg active month)] * [Gross Margin] )
+    // Format: $#,0.00
+    MEASURE '_Measures'[CPC] = DIVIDE ( SUM ( fct_campaign_daily[spend] ), SUM ( fct_campaign_daily[clicks] ) )
+
+    // ------------------------------------------------------------------ 8. Cohort retention (ignores the date slicer)
+    // Matrix: rows dim_accounts[cohort_month], columns fct_mrr[months_since_start] (filter 0..12).
+    MEASURE '_Measures'[Cohort Customers] =
+        CALCULATE ( DISTINCTCOUNT ( fct_mrr[account_id] ), REMOVEFILTERS ( dim_date ),
+                    REMOVEFILTERS ( fct_mrr[months_since_start] ), fct_mrr[months_since_start] = 0 )
+    MEASURE '_Measures'[Cohort Retained Customers] =
+        CALCULATE ( DISTINCTCOUNT ( fct_mrr[account_id] ), REMOVEFILTERS ( dim_date ), fct_mrr[is_active] = TRUE () )
+    // Format: 0%
+    MEASURE '_Measures'[Cohort Retention %] = DIVIDE ( [Cohort Retained Customers], [Cohort Customers] )
+
+    // ------------------------------------------------------------------ 9. Customer health (churn model output)
+    MEASURE '_Measures'[Scored Customers] = COUNTROWS ( churn_scores )
+    MEASURE '_Measures'[High-Risk Customers] = CALCULATE ( COUNTROWS ( churn_scores ), churn_scores[risk_tier] = "High" )
+    // Format: $#,0
+    MEASURE '_Measures'[MRR at Risk (High)] = CALCULATE ( SUM ( churn_scores[mrr] ), churn_scores[risk_tier] = "High" )
+    MEASURE '_Measures'[Expected MRR Loss (3m)] = SUM ( churn_scores[expected_mrr_loss] )
+    // Format: 0.0%
+    MEASURE '_Measures'[Avg Churn Probability] = AVERAGE ( churn_scores[churn_probability] )
+    // Format: 0.0
+    MEASURE '_Measures'[Avg Sessions per Seat] = AVERAGE ( fct_usage_monthly[sessions_per_seat] )
+
+    // ------------------------------------------------------------------ 10. Forecast (company level)
+    // Blank when a segment slicer is active, because the forecast is not segmented.   Format: $#,0
+    MEASURE '_Measures'[Forecast MRR] =
+        IF ( NOT ISCROSSFILTERED ( dim_accounts ) && NOT ISCROSSFILTERED ( dim_plans ),
+             CALCULATE ( SUM ( mrr_forecast[mrr] ), mrr_forecast[series] = "Forecast" ) )
+    MEASURE '_Measures'[Forecast Lower 80%] =
+        IF ( NOT ISBLANK ( [Forecast MRR] ), CALCULATE ( SUM ( mrr_forecast[lower_80] ), mrr_forecast[series] = "Forecast" ) )
+    MEASURE '_Measures'[Forecast Upper 80%] =
+        IF ( NOT ISBLANK ( [Forecast MRR] ), CALCULATE ( SUM ( mrr_forecast[upper_80] ), mrr_forecast[series] = "Forecast" ) )
+    // Actual line for the forecast chart; follows all slicers like [MRR].   Format: $#,0
+    MEASURE '_Measures'[Actual MRR (chart)] = [MRR]
+
+// ------------------------------------------------------------------ headline KPIs (compare with validation_targets.csv)
+EVALUATE
+ROW (
+    "MRR", [MRR],
+    "ARR", [ARR],
+    "Active Customers", [Active Customers],
+    "Total Customers", [Total Customers],
+    "MRR Growth %", [MRR Growth %],
+    "NRR", [NRR],
+    "GRR", [GRR],
+    "CAC", [CAC],
+    "Total Signups", [Total Signups],
+    "Activated Customers", [Activated Customers],
+    "Paying Customers", [Paying Customers],
+    "Overall Conversion Rate", [Overall Conversion Rate],
+    "ARPA", [ARPA],
+    "High-Risk Customers", [High-Risk Customers]
+)

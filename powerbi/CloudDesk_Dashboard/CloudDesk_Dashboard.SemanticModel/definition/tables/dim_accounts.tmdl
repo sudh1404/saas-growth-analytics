@@ -1,0 +1,300 @@
+table dim_accounts
+	lineageTag: 89b2a01a-5cac-46c2-8b14-3eae707a0b58
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2d3b6f87-0d8d-41ca-9cfd-0d8f510c86f8
+		summarizeBy: none
+		sourceColumn: account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column signup_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 38932ec5-0443-4087-a998-f43853d5ce28
+		summarizeBy: none
+		sourceColumn: signup_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column signup_month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8c69ef29-72c0-4756-92ed-a4e21b196394
+		summarizeBy: none
+		sourceColumn: signup_month
+
+		variation Variation
+			isDefault
+			relationship: fd345f18-f433-44b5-9aa6-67641c8c9723
+			defaultHierarchy: LocalDateTable_2878903a-4394-47fa-915b-ef51046e7753.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column acquisition_channel
+		dataType: string
+		lineageTag: f97201d7-c19b-4ee7-87ec-307bb4cd0158
+		summarizeBy: none
+		sourceColumn: acquisition_channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: f3767452-cc9c-4a88-a836-3d091a6c5a01
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column company_size
+		dataType: string
+		lineageTag: 39457d29-34f1-4a2f-950c-e601de7eca19
+		summarizeBy: none
+		sourceColumn: company_size
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_segment
+		dataType: string
+		lineageTag: caf00d24-9d02-44d7-8c63-2c202851ce09
+		summarizeBy: none
+		sourceColumn: customer_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column industry
+		dataType: string
+		lineageTag: 3fe0a27d-a2c6-422c-b43e-2031a9b38222
+		summarizeBy: none
+		sourceColumn: industry
+
+		annotation SummarizationSetBy = Automatic
+
+	column pricing_page_variant
+		dataType: string
+		lineageTag: f89ad8c7-004e-4cf9-88c7-0e946153df4b
+		summarizeBy: none
+		sourceColumn: pricing_page_variant
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_onboarded
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 1e911931-5b70-4258-adbb-e39a5928ff25
+		summarizeBy: none
+		sourceColumn: is_onboarded
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_created_project
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 10ff73ca-c777-46db-b321-17b768fbbe05
+		summarizeBy: none
+		sourceColumn: has_created_project
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_activated
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 52afe2e7-b9c1-4410-a486-44adcbfe2fc4
+		summarizeBy: none
+		sourceColumn: is_activated
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_paying_customer
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 13c3a5c9-5a9c-4abb-9fc0-b7b10a824826
+		summarizeBy: none
+		sourceColumn: is_paying_customer
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_paid_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 772207f0-19a2-4045-a989-4a10bc19e6ca
+		summarizeBy: none
+		sourceColumn: first_paid_date
+
+		variation Variation
+			isDefault
+			relationship: daf656f2-ba1d-4ed6-bfcd-2e8e7c66898c
+			defaultHierarchy: LocalDateTable_7ab7d0ea-1dd5-48ad-9d4c-029c09b0f9d2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column cohort_month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4321b5df-043d-47ad-8d51-3806a1114868
+		summarizeBy: none
+		sourceColumn: cohort_month
+
+		variation Variation
+			isDefault
+			relationship: afd78db9-ffb3-4419-a8da-836add801483
+			defaultHierarchy: LocalDateTable_28cb8f7b-b51a-4850-8700-f15caeaf401f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column first_plan_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ade9122f-1212-493e-875e-5975319e89ea
+		summarizeBy: sum
+		sourceColumn: first_plan_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column current_plan_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 56ca8d14-9073-4789-ac52-8ae1a480eebc
+		summarizeBy: sum
+		sourceColumn: current_plan_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column current_mrr
+		dataType: double
+		lineageTag: 0a82da8a-d4e9-498a-b611-d6a4b234c063
+		summarizeBy: sum
+		sourceColumn: current_mrr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column churned_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0c207f4e-8e0e-4476-901e-1f2121bd2741
+		summarizeBy: none
+		sourceColumn: churned_date
+
+		variation Variation
+			isDefault
+			relationship: 1908c726-e2e6-4ecb-b23c-61a98a17b92e
+			defaultHierarchy: LocalDateTable_de3aa167-a786-45fa-8158-930c67728b12.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column churn_reason
+		dataType: string
+		lineageTag: 44f20a9a-155f-42bd-b153-cb98a06b1cec
+		summarizeBy: none
+		sourceColumn: churn_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column churn_type
+		dataType: string
+		lineageTag: 59e75a56-37c3-402d-af58-5f92c863e69f
+		summarizeBy: none
+		sourceColumn: churn_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column lifecycle_status
+		dataType: string
+		lineageTag: 9f8e1a8a-8ce7-4007-9ae1-3a91d8b7167e
+		summarizeBy: none
+		sourceColumn: lifecycle_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_months
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f5c8c40-a4d5-41ea-95ce-45d100ccf1d3
+		summarizeBy: sum
+		sourceColumn: tenure_months
+
+		annotation SummarizationSetBy = Automatic
+
+	column upgrades
+		dataType: int64
+		formatString: 0
+		lineageTag: c4e39ec7-df6c-414c-ae64-c69c45ae93ee
+		summarizeBy: sum
+		sourceColumn: upgrades
+
+		annotation SummarizationSetBy = Automatic
+
+	column downgrades
+		dataType: int64
+		formatString: 0
+		lineageTag: 40b66e9f-2ba5-4bfc-9101-34b7a53ff925
+		summarizeBy: sum
+		sourceColumn: downgrades
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_to_date
+		dataType: double
+		lineageTag: 6c8476b1-da1b-4d2d-9e79-086ec8adb2e2
+		summarizeBy: sum
+		sourceColumn: revenue_to_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column failed_payment_attempts
+		dataType: double
+		lineageTag: 47b1b370-2905-4b49-86e0-d150ab44014c
+		summarizeBy: sum
+		sourceColumn: failed_payment_attempts
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column unpaid_invoices
+		dataType: int64
+		formatString: 0
+		lineageTag: 69f5fb8e-5656-4431-8b08-47275efdbfd3
+		summarizeBy: sum
+		sourceColumn: unpaid_invoices
+
+		annotation SummarizationSetBy = Automatic
+
+	column support_tickets
+		dataType: int64
+		formatString: 0
+		lineageTag: 90ab4a8a-9304-4436-bd42-f15f53914d3a
+		summarizeBy: sum
+		sourceColumn: support_tickets
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_accounts = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "dim_accounts.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

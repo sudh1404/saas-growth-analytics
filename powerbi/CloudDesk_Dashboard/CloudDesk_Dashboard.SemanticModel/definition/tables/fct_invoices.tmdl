@@ -1,0 +1,117 @@
+table fct_invoices
+	lineageTag: 3bcc9c93-04f9-4e2a-84aa-ccb2e117a266
+
+	column invoice_id
+		dataType: int64
+		formatString: 0
+		lineageTag: a094ffd7-5d2d-4be9-a856-f56c11da5bbe
+		summarizeBy: sum
+		sourceColumn: invoice_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: b5332fb8-046e-4883-9b9e-ae963cc2da86
+		summarizeBy: none
+		sourceColumn: account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column subscription_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 382570ef-21fe-489b-b888-7c6212903c6d
+		summarizeBy: sum
+		sourceColumn: subscription_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column invoice_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ad4a7af9-9be3-46f1-a7a0-ad9261add6c7
+		summarizeBy: none
+		sourceColumn: invoice_date
+
+		variation Variation
+			isDefault
+			relationship: 1d0f91c3-b548-48b9-bee3-28ab2875b190
+			defaultHierarchy: LocalDateTable_00946d91-5a1d-4ac1-8d88-57caa865ec58.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column invoice_month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a583686f-53ae-40a9-8252-3349561f465c
+		summarizeBy: none
+		sourceColumn: invoice_month
+
+		variation Variation
+			isDefault
+			relationship: 92196162-3cb1-40e6-b8e7-66535031dab8
+			defaultHierarchy: LocalDateTable_fbf93765-7cc7-4e9c-a380-d0e88089d219.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column due_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 20d98033-0e31-42a0-a6d6-059f98e85598
+		summarizeBy: none
+		sourceColumn: due_date
+
+		variation Variation
+			isDefault
+			relationship: e1d9f8ca-767f-4d5e-b09c-7d59edd1ffba
+			defaultHierarchy: LocalDateTable_347282d3-7ac2-4948-9ca9-6dc40be02ad7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column amount
+		dataType: double
+		lineageTag: f031e636-f2b1-410a-8412-cb7e9f5447cb
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column status
+		dataType: string
+		lineageTag: 47f618eb-06b1-4770-aa0e-c9ec570cf027
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_paid
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6b0b2895-2037-40d4-8a05-d74a7c121faa
+		summarizeBy: none
+		sourceColumn: is_paid
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fct_invoices = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fct_invoices.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

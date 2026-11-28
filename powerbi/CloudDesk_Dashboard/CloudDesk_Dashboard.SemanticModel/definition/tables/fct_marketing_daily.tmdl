@@ -1,0 +1,102 @@
+table fct_marketing_daily
+	lineageTag: 18f65da5-2904-4fe6-ad56-12fee7ccb2c7
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4dd848fe-183d-4969-9009-a1ee22358759
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column channel
+		dataType: string
+		lineageTag: 5a2ddf25-98bd-4742-902a-be3da6339f85
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column visitors
+		dataType: double
+		lineageTag: e736a6f3-6179-4d4a-8def-6981d4f4a1e2
+		summarizeBy: sum
+		sourceColumn: visitors
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column pricing_page_views
+		dataType: double
+		lineageTag: 1721e2d2-fa35-45bc-a3db-756cb581c882
+		summarizeBy: sum
+		sourceColumn: pricing_page_views
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column signups
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f17d0a2-ebdd-4ac5-95dd-8142c310aa5e
+		summarizeBy: sum
+		sourceColumn: signups
+
+		annotation SummarizationSetBy = Automatic
+
+	column impressions
+		dataType: double
+		lineageTag: 72036dbc-99dd-4cd9-aa33-73247419c72f
+		summarizeBy: sum
+		sourceColumn: impressions
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column clicks
+		dataType: double
+		lineageTag: ea5d6195-1e05-41e5-b1b1-24f5af48e9aa
+		summarizeBy: sum
+		sourceColumn: clicks
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column spend
+		dataType: double
+		lineageTag: 23ca09d9-ba96-4e86-bbd3-c763df35bf21
+		summarizeBy: sum
+		sourceColumn: spend
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column new_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: 1b519e1d-410f-45a8-84d8-b97aa40ed143
+		summarizeBy: sum
+		sourceColumn: new_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fct_marketing_daily = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fct_marketing_daily.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

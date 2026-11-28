@@ -1,0 +1,90 @@
+table fct_campaign_daily
+	lineageTag: b55389e0-b85a-4792-82bf-825deb0e04ce
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 06b54ec2-622d-4b20-89d4-c399f6adca94
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column channel
+		dataType: string
+		lineageTag: 5531987c-076b-49b4-a56b-e35e83eb3c8f
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column campaign
+		dataType: string
+		lineageTag: 2bde183a-839e-46c0-9411-c78865955a58
+		summarizeBy: none
+		sourceColumn: campaign
+
+		annotation SummarizationSetBy = Automatic
+
+	column impressions
+		dataType: int64
+		formatString: 0
+		lineageTag: b35b2897-daca-49e8-aed5-8264c1b92c23
+		summarizeBy: sum
+		sourceColumn: impressions
+
+		annotation SummarizationSetBy = Automatic
+
+	column clicks
+		dataType: int64
+		formatString: 0
+		lineageTag: b7b42fd8-5e51-4b1f-b0a3-046231160260
+		summarizeBy: sum
+		sourceColumn: clicks
+
+		annotation SummarizationSetBy = Automatic
+
+	column spend
+		dataType: double
+		lineageTag: 02fa5b12-5277-4a29-90ab-f8a2e2f4d739
+		summarizeBy: sum
+		sourceColumn: spend
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cpc
+		dataType: double
+		lineageTag: 256d6177-d6c3-442d-957f-e0b10799715b
+		summarizeBy: sum
+		sourceColumn: cpc
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ctr
+		dataType: double
+		lineageTag: 8ed1fc54-c4de-48aa-ac6f-1a71570273ba
+		summarizeBy: sum
+		sourceColumn: ctr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fct_campaign_daily = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fct_campaign_daily.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

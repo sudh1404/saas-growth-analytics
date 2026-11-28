@@ -1,0 +1,351 @@
+table _Measures
+	lineageTag: a4a0c657-5e18-4e5a-b410-9c60454020c4
+
+	measure MRR = ```
+			
+			        VAR _m = MAX ( fct_mrr[month] )
+			        RETURN CALCULATE ( SUM ( fct_mrr[mrr] ), fct_mrr[month] = _m )
+			```
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: f23743b6-4cea-404f-b397-573a420b0980
+
+	measure ARR = [MRR] * 12
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: c2f5bc90-4856-4f5e-9a5b-f715e6a09b49
+
+	measure 'MRR Previous Month' = ```
+			
+			        VAR _m = MAX ( fct_mrr[month] )
+			        RETURN CALCULATE ( SUM ( fct_mrr[mrr] ), REMOVEFILTERS ( dim_date ), fct_mrr[month] = EDATE ( _m, -1 ) )
+			```
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: c196b54f-2d2d-4abf-a48c-b4ed358977e2
+
+	measure 'MRR Growth %' = ```
+			
+			        DIVIDE ( [MRR] - [MRR Previous Month], [MRR Previous Month] )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: dc834101-5f35-4685-b42e-e2bc688db951
+
+	measure 'Opening MRR' = ```
+			
+			        VAR _first = MIN ( fct_mrr[month] )
+			        RETURN CALCULATE ( SUM ( fct_mrr[prev_mrr] ), fct_mrr[month] = _first )
+			```
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: 29470626-01df-44e4-8449-b11ebf0663b4
+
+	measure 'New MRR' = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "new" )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: ab71fdfc-b59b-4816-9cf5-82e3586ddffe
+
+	measure 'Expansion MRR' = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "expansion" )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: 8dde5d8f-7381-4721-b7d1-3bff82b1b13b
+
+	measure 'Reactivation MRR' = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "reactivation" )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: ba9c34d4-6b99-4771-91d5-9de2d5867a9f
+
+	measure 'Contraction MRR' = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "contraction" )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: a48030c4-913c-4b44-8de9-9de58668e492
+
+	measure 'Churned MRR' = CALCULATE ( SUM ( fct_mrr[mrr_change] ), fct_mrr[movement_type] = "churn" )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: 8a9c9502-fb58-440a-a27b-caee91a176a4
+
+	measure 'Net New MRR' = SUM ( fct_mrr[mrr_change] )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: c66574b3-23b7-4a11-8813-e94037e932ae
+
+	measure 'Lost MRR (Churn + Contraction)' = - ( [Churned MRR] + [Contraction MRR] )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: d5e487f4-bf94-473d-a7fc-12b8330ab485
+
+	measure 'Active Customers' = ```
+			
+			        VAR _m = MAX ( fct_mrr[month] )
+			        RETURN CALCULATE ( DISTINCTCOUNT ( fct_mrr[account_id] ), fct_mrr[month] = _m, fct_mrr[is_active] = TRUE () )
+			```
+		formatString: #,0
+		lineageTag: d674482f-0a97-4457-a3e7-808732b2139e
+
+	measure 'Total Customers' = ```
+			
+			        VAR _m = MAX ( fct_mrr[month] )
+			        RETURN CALCULATE ( DISTINCTCOUNT ( fct_mrr[account_id] ), REMOVEFILTERS ( dim_date ), fct_mrr[month] <= _m )
+			```
+		formatString: #,0
+		lineageTag: 1459b88a-48e0-43ad-af9d-119b284637c9
+
+	measure 'New Customers' = CALCULATE ( COUNTROWS ( fct_mrr ), fct_mrr[movement_type] = "new" )
+		formatString: #,0
+		lineageTag: 4873236c-939e-44f4-9ef7-d63ea76ed76f
+
+	measure 'Churned Customers' = CALCULATE ( COUNTROWS ( fct_mrr ), fct_mrr[movement_type] = "churn" )
+		formatString: #,0
+		lineageTag: 86a009ec-0a2b-4e41-9cea-397a805ee017
+
+	measure 'Customer Months at Risk' = CALCULATE ( COUNTROWS ( fct_mrr ), fct_mrr[prev_mrr] > 0 )
+		formatString: #,0
+		lineageTag: 92bc530e-9e51-4ddf-9215-066b58a9a17d
+
+	measure 'Customer Churn Rate' = DIVIDE ( [Churned Customers], [Customer Months at Risk] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 28263ebc-33d9-4c98-b25d-40cd0e22a81e
+
+	measure 'Customer Retention Rate' = 1 - [Customer Churn Rate]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 363d1814-1768-4790-a497-27c82a5678e5
+
+	measure ARPA = DIVIDE ( [MRR], [Active Customers] )
+		formatString: \$#,0.00;-\$#,0.00;\$#,0.00
+		lineageTag: 71d7926d-42b1-489d-b769-7a0c90565698
+
+	measure ARPU = ```
+			
+			        VAR _m = MAX ( fct_mrr[month] )
+			        VAR _mrr = CALCULATE ( SUM ( fct_mrr[mrr] ), fct_mrr[month] = _m, fct_mrr[is_active] = TRUE (), NOT ISBLANK ( fct_mrr[active_seats] ) )
+			        VAR _seats = CALCULATE ( SUM ( fct_mrr[active_seats] ), fct_mrr[month] = _m, fct_mrr[is_active] = TRUE () )
+			        RETURN DIVIDE ( _mrr, _seats )
+			```
+		formatString: \$#,0.00;-\$#,0.00;\$#,0.00
+		lineageTag: ab90e300-0e25-4aa2-9bcc-dd5641a812fe
+
+	measure NRR = ```
+			
+			        VAR _cur = MAX ( fct_mrr[month] )
+			        VAR _base = EDATE ( _cur, -12 )
+			        VAR _t =
+			            CALCULATETABLE (
+			                ADDCOLUMNS (
+			                    VALUES ( fct_mrr[account_id] ),
+			                    "@m0", CALCULATE ( SUM ( fct_mrr[mrr] ) ),
+			                    "@m1", CALCULATE ( SUM ( fct_mrr[mrr] ), fct_mrr[month] = _cur )
+			                ),
+			                REMOVEFILTERS ( dim_date ),
+			                fct_mrr[month] = _base,
+			                fct_mrr[mrr] > 0
+			            )
+			        RETURN DIVIDE ( SUMX ( _t, [@m1] ), SUMX ( _t, [@m0] ) )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5b89e17b-ef5e-4d3d-ad80-2b8c896eb291
+
+	measure GRR = ```
+			
+			        VAR _cur = MAX ( fct_mrr[month] )
+			        VAR _base = EDATE ( _cur, -12 )
+			        VAR _t =
+			            CALCULATETABLE (
+			                ADDCOLUMNS (
+			                    VALUES ( fct_mrr[account_id] ),
+			                    "@m0", CALCULATE ( SUM ( fct_mrr[mrr] ) ),
+			                    "@m1", CALCULATE ( SUM ( fct_mrr[mrr] ), fct_mrr[month] = _cur )
+			                ),
+			                REMOVEFILTERS ( dim_date ),
+			                fct_mrr[month] = _base,
+			                fct_mrr[mrr] > 0
+			            )
+			        RETURN DIVIDE ( SUMX ( _t, MIN ( COALESCE ( [@m1], 0 ), [@m0] ) ), SUMX ( _t, [@m0] ) )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 48040522-2734-4967-9c82-a30d8f88666d
+
+	measure 'Total Signups' = ```
+			
+			        CALCULATE ( COUNTROWS ( dim_accounts ), USERELATIONSHIP ( dim_date[date], dim_accounts[signup_date] ) )
+			```
+		formatString: #,0
+		lineageTag: 03fe35d7-721e-4bd2-bbc6-fc422a46b2dd
+
+	measure 'Onboarded Accounts' = CALCULATE ( [Total Signups], dim_accounts[is_onboarded] = TRUE () )
+		formatString: #,0
+		lineageTag: 34b174a5-2d98-46a4-ad92-23237a3cba8d
+
+	measure 'Activated Customers' = CALCULATE ( [Total Signups], dim_accounts[is_activated] = TRUE () )
+		formatString: #,0
+		lineageTag: ad99a52a-bf30-4ae7-a6a3-b278e07fbc84
+
+	measure 'Paying Customers' = CALCULATE ( [Total Signups], dim_accounts[is_paying_customer] = TRUE () )
+		formatString: #,0
+		lineageTag: 1d10ef8d-738f-45b9-8c04-da750dbfd2bc
+
+	measure 'Overall Conversion Rate' = DIVIDE ( [Paying Customers], [Total Signups] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 69538fbf-030a-49bc-90e1-bd59ef371fbc
+
+	measure 'Activation Rate' = DIVIDE ( [Activated Customers], [Total Signups] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ab912176-0681-40f9-b06c-282a25360482
+
+	measure 'Activated to Paid %' = ```
+			
+			        DIVIDE ( CALCULATE ( [Paying Customers], dim_accounts[is_activated] = TRUE () ), [Activated Customers] )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 9ff0778e-cf59-4a14-b476-02e2e3edf259
+
+	measure 'Funnel Accounts' = ```
+			
+			        CALCULATE ( DISTINCTCOUNT ( fct_funnel_steps[account_id] ), USERELATIONSHIP ( dim_date[date], dim_accounts[signup_date] ) )
+			```
+		formatString: #,0
+		lineageTag: f508c60b-19ec-41f1-aeff-89dba9bff63a
+
+	measure 'Step Conversion %' = ```
+			
+			        VAR _s = SELECTEDVALUE ( fct_funnel_steps[step_order] )
+			        VAR _prev = CALCULATE ( [Funnel Accounts], REMOVEFILTERS ( fct_funnel_steps[step_name], fct_funnel_steps[step_order] ),
+			                                fct_funnel_steps[step_order] = _s - 1 )
+			        RETURN IF ( _s > 1, DIVIDE ( [Funnel Accounts], _prev ) )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: dd695c1e-16ff-402f-9f6b-f33a83d1d6b4
+
+	measure 'Step Drop-off %' = IF ( NOT ISBLANK ( [Step Conversion %] ), 1 - [Step Conversion %] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: f91c6032-90c8-4a09-8f1f-1a96d394e8ac
+
+	measure Visitors = SUM ( fct_marketing_daily[visitors] )
+		formatString: #,0
+		lineageTag: ed265cf3-c49e-4461-9636-9657288c8eca
+
+	measure 'Visit to Signup %' = DIVIDE ( SUM ( fct_marketing_daily[signups] ), [Visitors] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 266023ff-76a9-4f77-a129-bc50c5dd34b1
+
+	measure 'Marketing Spend' = SUM ( fct_marketing_daily[spend] )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: 967d9434-0524-47ac-9e16-cad40aab1cc2
+
+	measure 'New Customers Acquired' = SUM ( fct_marketing_daily[new_customers] )
+		formatString: #,0
+		lineageTag: 14842e46-b6cf-4b28-a65b-308759e66d26
+
+	measure CAC = ```
+			
+			        DIVIDE ( [Marketing Spend], CALCULATE ( [New Customers Acquired], dim_channel[is_paid] = TRUE () ) )
+			```
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: 846e186a-3035-4579-b78c-5a7cd3d91103
+
+	measure 'Blended CAC' = DIVIDE ( [Marketing Spend], [New Customers Acquired] )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: 5902413c-3dcf-4847-b31e-a91655c6e900
+
+	measure 'Gross Margin' = 0.80
+		lineageTag: 09835415-0420-46ae-b7f3-cd744703d93b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'ARPA (avg active month)' = CALCULATE ( AVERAGE ( fct_mrr[mrr] ), fct_mrr[is_active] = TRUE () )
+		formatString: \$#,0.00;-\$#,0.00;\$#,0.00
+		lineageTag: 014ae672-dcfc-4837-ad6d-7f3ec7f96238
+
+	measure LTV = DIVIDE ( [ARPA (avg active month)] * [Gross Margin], [Customer Churn Rate] )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: fedfe47c-3151-4849-85be-82d4db624290
+
+	measure LTV/CAC = DIVIDE ( [LTV], [CAC] )
+		formatString: 0.0
+		lineageTag: ed914e90-ab56-4493-a81a-05dccc246f6b
+
+	measure 'CAC Payback (months)' = DIVIDE ( [CAC], [ARPA (avg active month)] * [Gross Margin] )
+		formatString: 0.0
+		lineageTag: b3dd5c94-3368-4246-9320-d302017335f4
+
+	measure CPC = DIVIDE ( SUM ( fct_campaign_daily[spend] ), SUM ( fct_campaign_daily[clicks] ) )
+		formatString: \$#,0.00;-\$#,0.00;\$#,0.00
+		lineageTag: 7fa513d7-9a5e-42ed-9609-f875d991592d
+
+	measure 'Cohort Customers' = ```
+			
+			        CALCULATE ( DISTINCTCOUNT ( fct_mrr[account_id] ), REMOVEFILTERS ( dim_date ),
+			                    REMOVEFILTERS ( fct_mrr[months_since_start] ), fct_mrr[months_since_start] = 0 )
+			```
+		formatString: #,0
+		lineageTag: 5ddfb7a2-0819-4dc4-ba82-255956ef8de5
+
+	measure 'Cohort Retained Customers' = ```
+			
+			        CALCULATE ( DISTINCTCOUNT ( fct_mrr[account_id] ), REMOVEFILTERS ( dim_date ), fct_mrr[is_active] = TRUE () )
+			```
+		formatString: #,0
+		lineageTag: a75838fa-e08d-4c19-9f03-4e616f5b8a69
+
+	measure 'Cohort Retention %' = DIVIDE ( [Cohort Retained Customers], [Cohort Customers] )
+		formatString: 0%;-0%;0%
+		lineageTag: 461a61bf-853e-4be7-a019-42fef3a1bf47
+
+	measure 'Scored Customers' = COUNTROWS ( churn_scores )
+		formatString: #,0
+		lineageTag: 4acbc834-ab70-47a9-bcd3-38988cdd962c
+
+	measure 'High-Risk Customers' = CALCULATE ( COUNTROWS ( churn_scores ), churn_scores[risk_tier] = "High" )
+		formatString: #,0
+		lineageTag: c79dd456-823d-4169-b5c9-d7c6360444cf
+
+	measure 'MRR at Risk (High)' = CALCULATE ( SUM ( churn_scores[mrr] ), churn_scores[risk_tier] = "High" )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: c8c9f809-fc1d-4e50-a584-9cbfd52ff84f
+
+	measure 'Expected MRR Loss (3m)' = SUM ( churn_scores[expected_mrr_loss] )
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: e8145638-96c2-4fa6-ad2b-56ea3236aed1
+
+	measure 'Avg Churn Probability' = AVERAGE ( churn_scores[churn_probability] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 47af4701-e236-490d-975a-d0b05797a1d5
+
+	measure 'Avg Sessions per Seat' = AVERAGE ( fct_usage_monthly[sessions_per_seat] )
+		formatString: 0.0
+		lineageTag: 8327bea4-3f14-4965-9731-d04a1cff3892
+
+	measure 'Forecast MRR' = ```
+			
+			        IF ( NOT ISCROSSFILTERED ( dim_accounts ) && NOT ISCROSSFILTERED ( dim_plans ),
+			             CALCULATE ( SUM ( mrr_forecast[mrr] ), mrr_forecast[series] = "Forecast" ) )
+			```
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: 2b8bc83e-0143-406f-adae-5338ef822f07
+
+	measure 'Forecast Lower 80%' = ```
+			
+			        IF ( NOT ISBLANK ( [Forecast MRR] ), CALCULATE ( SUM ( mrr_forecast[lower_80] ), mrr_forecast[series] = "Forecast" ) )
+			```
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: 0e9c7e97-8361-467c-a963-d677ee7ae5da
+
+	measure 'Forecast Upper 80%' = ```
+			
+			        IF ( NOT ISBLANK ( [Forecast MRR] ), CALCULATE ( SUM ( mrr_forecast[upper_80] ), mrr_forecast[series] = "Forecast" ) )
+			```
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: e44054cb-f28d-448f-8233-8ef6dded92f5
+
+	measure 'Actual MRR (chart)' = [MRR]
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: f8e67f7f-2574-4857-9df0-a768739536d7
+
+	column Column1
+		dataType: string
+		lineageTag: 3e99cb25-2ff3-4d6a-88d1-40e077c6ec3c
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,128 @@
+table dim_date
+	lineageTag: df79d66a-bb11-4230-ade4-5eef684b3ddc
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 40a77772-01e4-43a9-ac7a-61d265fa8b65
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: 5c988741-172a-4190-bb15-9f379fc691e0
+			defaultHierarchy: LocalDateTable_9012c3d6-46e7-456f-b603-4fc6aedf4a9c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: c93f329c-cd06-453f-8d29-2828e4d0370a
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: d67ad040-4b8c-4815-9866-f9d373f98e5e
+		summarizeBy: sum
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_quarter
+		dataType: string
+		lineageTag: f86cf39f-f3a8-4289-bf87-da74aa6d56c1
+		summarizeBy: none
+		sourceColumn: year_quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_num
+		dataType: int64
+		formatString: 0
+		lineageTag: 0f4f75ec-ffde-4bfb-ae80-312a6a7d536b
+		summarizeBy: sum
+		sourceColumn: month_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: 13029a1d-6dde-488e-9ead-72b9ac9342dd
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month_num
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_start
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 827727da-293b-4cf3-a200-177d2c8c06f0
+		summarizeBy: none
+		sourceColumn: month_start
+
+		variation Variation
+			isDefault
+			relationship: 04163ba8-8435-4e4c-8574-6d1423ee1e4e
+			defaultHierarchy: LocalDateTable_ec11ce2b-8568-4f0d-a581-55a9d695e7e8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year_month
+		dataType: string
+		lineageTag: b972a46e-b1ec-4568-975a-53c60cb26e14
+		summarizeBy: none
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 5dd08267-353c-4704-8f4d-09d17f6b2f60
+		summarizeBy: sum
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 286c0747-5544-4237-8b09-0832d7a35c2d
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_actual_period
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 41952b98-2b18-4eb2-9bd1-375784d1f467
+		summarizeBy: none
+		sourceColumn: is_actual_period
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "dim_date.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

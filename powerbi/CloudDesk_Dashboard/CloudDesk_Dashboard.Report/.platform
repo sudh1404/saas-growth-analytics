@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "CloudDesk_Dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "97ad7a40-c2b9-4004-82c0-ee130b9eb1c5"
+  }
+}

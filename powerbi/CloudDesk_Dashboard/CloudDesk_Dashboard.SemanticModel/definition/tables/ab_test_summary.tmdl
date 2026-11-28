@@ -1,0 +1,92 @@
+table ab_test_summary
+	isHidden
+	lineageTag: d2057973-8666-4e5c-9eb4-a2bcdbbd529e
+
+	column metric
+		dataType: string
+		isHidden
+		lineageTag: 654a5adb-1a9e-4749-808d-8e70e47733f6
+		summarizeBy: none
+		sourceColumn: metric
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column A
+		dataType: double
+		isHidden
+		lineageTag: 70c09610-733f-478b-8301-eabbf81d74ff
+		summarizeBy: sum
+		sourceColumn: A
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column B
+		dataType: double
+		isHidden
+		lineageTag: 8d1c9423-3ed8-455c-afeb-2fa75ccefcad
+		summarizeBy: sum
+		sourceColumn: B
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column difference
+		dataType: double
+		isHidden
+		lineageTag: 4900b23b-c1ce-4c3c-9de9-6f99bce1eb63
+		summarizeBy: sum
+		sourceColumn: difference
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column p_value
+		dataType: double
+		isHidden
+		lineageTag: 42070d72-36d8-45b6-bf93-ef272570e4e8
+		summarizeBy: sum
+		sourceColumn: p_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column decision
+		dataType: string
+		isHidden
+		lineageTag: ea14083c-20ca-45f6-a2c3-06287c34bf26
+		summarizeBy: none
+		sourceColumn: decision
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ab_test_summary = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "ab_test_summary.parquet"))
+				in
+				    Source
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

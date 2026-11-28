@@ -1,0 +1,52 @@
+{
+  "name": "CloudDesk Professional",
+  "dataColors": ["#257DE0", "#F47230", "#00B894", "#F2A600", "#EE7FAC", "#008A17", "#6A4CE2", "#EC4647"],
+  "good": "#0AAC23",
+  "neutral": "#FBB315",
+  "bad": "#DC3C3D",
+  "maximum": "#0E3D7E",
+  "center": "#6AABF1",
+  "minimum": "#CCE3FD",
+  "background": "#FFFFFF",
+  "foreground": "#191919",
+  "tableAccent": "#1F3B5C",
+  "textClasses": {
+    "title":   { "fontFace": "Segoe UI Semibold", "fontSize": 13, "color": "#191919" },
+    "header":  { "fontFace": "Segoe UI Semibold", "fontSize": 11, "color": "#191919" },
+    "label":   { "fontFace": "Segoe UI", "fontSize": 10, "color": "#666666" },
+    "callout": { "fontFace": "Segoe UI Semibold", "fontSize": 26, "color": "#1F3B5C" }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [{ "show": true, "color": { "solid": { "color": "#FFFFFF" } }, "transparency": 0 }],
+        "border": [{ "show": true, "color": { "solid": { "color": "#E3E8EE" } }, "radius": 8 }],
+        "dropShadow": [{ "show": false }],
+        "visualHeader": [{ "show": true }],
+        "title": [{ "show": true, "fontSize": 12, "fontColor": { "solid": { "color": "#191919" } }, "alignment": "left" }],
+        "valueAxis": [{ "gridlineColor": { "solid": { "color": "#E6E6E6" } }, "gridlineThickness": 1 }]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [{ "color": { "solid": { "color": "#F4F6F9" } }, "transparency": 0 }]
+      }
+    },
+    "card": {
+      "*": {
+        "labels": [{ "color": { "solid": { "color": "#1F3B5C" } }, "fontSize": 24 }],
+        "categoryLabels": [{ "color": { "solid": { "color": "#666666" } }, "fontSize": 10 }]
+      }
+    },
+    "lineChart": {
+      "*": {
+        "lineStyles": [{ "strokeWidth": 2 }]
+      }
+    },
+    "slicer": {
+      "*": {
+        "header": [{ "fontColor": { "solid": { "color": "#666666" } }, "textSize": 10 }]
+      }
+    }
+  }
+}

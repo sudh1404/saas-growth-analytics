@@ -1,0 +1,25 @@
+page,kpi,filter_context,expected_value
+Executive,MRR (Dec 2025),no filters,348007.0
+Executive,ARR (Dec 2025),no filters,4176084.0
+Executive,Active Customers (Dec 2025),no filters,4233.0
+Executive,Total Customers (ever paid),no filters,5539.0
+Executive,MRR Growth % (Dec vs Nov 2025),no filters,0.0508
+Executive,"Customer Churn Rate (Dec 2025, monthly)",month = Dec 2025,0.0291
+Executive,Customer Churn Rate (2025 avg monthly),year = 2025,0.0295
+Executive,NRR 12m (Dec 2025),no filters,0.8203
+Retention,GRR 12m (Dec 2025),no filters,0.6895
+Executive,CAC paid channels (all time),no filters,462.1973
+Acquisition,Total Signups (all time),no filters,27181.0
+Acquisition,Activated Customers (all time),no filters,6892.0
+Acquisition,Paying Customers from signups (all time),no filters,5539.0
+Acquisition,Overall Conversion (signup -> paid),no filters,0.2038
+Acquisition,Total Signups,channel = paid_search,6783.0
+Retention,High-Risk Customers,no filters,198.0
+Revenue,ARPA (Dec 2025),no filters,82.2129
+Revenue,"LTV (all time, paid channels)",channel type = Paid,2068.2357
+Revenue,CAC,channel = paid_search,487.064
+Revenue,LTV/CAC,channel = paid_search,4.2483
+Revenue,New MRR (2025),year = 2025,245112.0
+Revenue,Expansion MRR (2025),year = 2025,50610.0
+Revenue,Contraction MRR (2025),year = 2025,-29160.0
+Revenue,Churned MRR (2025),year = 2025,-67188.0

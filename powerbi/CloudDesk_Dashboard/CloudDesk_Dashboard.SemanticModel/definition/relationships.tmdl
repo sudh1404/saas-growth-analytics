@@ -1,0 +1,125 @@
+relationship 8007d507-9d65-4808-b648-054818834a7f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fct_mrr.cohort_month
+	toColumn: LocalDateTable_c0d1b336-c92f-42ea-b932-838d8603f426.Date
+
+relationship fd345f18-f433-44b5-9aa6-67641c8c9723
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_accounts.signup_month
+	toColumn: LocalDateTable_2878903a-4394-47fa-915b-ef51046e7753.Date
+
+relationship daf656f2-ba1d-4ed6-bfcd-2e8e7c66898c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_accounts.first_paid_date
+	toColumn: LocalDateTable_7ab7d0ea-1dd5-48ad-9d4c-029c09b0f9d2.Date
+
+relationship afd78db9-ffb3-4419-a8da-836add801483
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_accounts.cohort_month
+	toColumn: LocalDateTable_28cb8f7b-b51a-4850-8700-f15caeaf401f.Date
+
+relationship 1908c726-e2e6-4ecb-b23c-61a98a17b92e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_accounts.churned_date
+	toColumn: LocalDateTable_de3aa167-a786-45fa-8158-930c67728b12.Date
+
+relationship 5c988741-172a-4190-bb15-9f379fc691e0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_date.date
+	toColumn: LocalDateTable_9012c3d6-46e7-456f-b603-4fc6aedf4a9c.Date
+
+relationship 04163ba8-8435-4e4c-8574-6d1423ee1e4e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_date.month_start
+	toColumn: LocalDateTable_ec11ce2b-8568-4f0d-a581-55a9d695e7e8.Date
+
+relationship 0a4bf02d-4728-41c0-80e8-b7b419937ba0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fct_funnel_steps.reached_at
+	toColumn: LocalDateTable_3eb7efd1-9449-4943-b72d-26a0c4184359.Date
+
+relationship 1d0f91c3-b548-48b9-bee3-28ab2875b190
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fct_invoices.invoice_date
+	toColumn: LocalDateTable_00946d91-5a1d-4ac1-8d88-57caa865ec58.Date
+
+relationship 92196162-3cb1-40e6-b8e7-66535031dab8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fct_invoices.invoice_month
+	toColumn: LocalDateTable_fbf93765-7cc7-4e9c-a380-d0e88089d219.Date
+
+relationship e1d9f8ca-767f-4d5e-b09c-7d59edd1ffba
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fct_invoices.due_date
+	toColumn: LocalDateTable_347282d3-7ac2-4948-9ca9-6dc40be02ad7.Date
+
+relationship 5927481a-b489-483d-9900-b450a769d720
+	joinOnDateBehavior: datePartOnly
+	fromColumn: churn_scores.scored_at
+	toColumn: LocalDateTable_09d4a749-ed1e-4ddb-8801-ee9f49eeed36.Date
+
+relationship AutoDetected_596d177c-265c-4c54-8219-0a0935fd8e2c
+	fromColumn: fct_mrr.account_id
+	toColumn: dim_accounts.account_id
+
+relationship AutoDetected_121b45a7-05f5-4c99-ac8c-f10aaa157d04
+	fromColumn: fct_funnel_steps.account_id
+	toColumn: dim_accounts.account_id
+
+relationship AutoDetected_aca257bb-0105-4bd8-bd45-74fbe76af9ae
+	fromColumn: fct_usage_monthly.account_id
+	toColumn: dim_accounts.account_id
+
+relationship AutoDetected_fb581776-32ea-4718-b284-59308f2b94f4
+	fromColumn: fct_invoices.account_id
+	toColumn: dim_accounts.account_id
+
+relationship AutoDetected_52f02d48-8704-4533-84d3-dc8596f64695
+	fromColumn: churn_scores.account_id
+	toColumn: dim_accounts.account_id
+
+relationship AutoDetected_d7443a05-ecf3-4663-97e4-927b5997d123
+	fromColumn: fct_mrr.plan_id
+	toColumn: dim_plans.plan_id
+
+relationship AutoDetected_dff74ca5-c9c6-4dfb-9a2a-8029a4aaf791
+	fromColumn: fct_marketing_daily.channel
+	toColumn: dim_channel.channel
+
+relationship AutoDetected_1c72d037-78ac-4441-8320-99da7c32c66f
+	fromColumn: fct_campaign_daily.channel
+	toColumn: dim_channel.channel
+
+relationship AutoDetected_badd886c-a4f1-4b2d-9700-da40cbd35a37
+	fromColumn: agg_channel_performance.channel
+	toColumn: dim_channel.channel
+
+relationship 204e98ff-f0ee-7ebf-0576-c3783221660a
+	fromColumn: fct_mrr.month
+	toColumn: dim_date.date
+
+relationship fa6d3ac5-4677-0477-ff0d-32f81c553fd2
+	fromColumn: fct_marketing_daily.date
+	toColumn: dim_date.date
+
+relationship 523b2b66-9261-2b10-416d-da400bc00c95
+	fromColumn: fct_campaign_daily.date
+	toColumn: dim_date.date
+
+relationship fd72e71a-51be-8c61-85ad-32844235e7f7
+	fromColumn: fct_usage_monthly.usage_month
+	toColumn: dim_date.date
+
+relationship 504fa2e2-1d55-ba13-035d-34940909488f
+	fromColumn: mrr_forecast.month
+	toColumn: dim_date.date
+
+relationship fb6cd2a1-5b7e-b8bc-ffcc-b640168504e9
+	isActive: false
+	fromColumn: dim_accounts.signup_date
+	toColumn: dim_date.date
+
+relationship 4e97486d-fda3-3d12-f50f-cd6f06e4e0fb
+	fromColumn: dim_accounts.acquisition_channel
+	toColumn: dim_channel.channel
+

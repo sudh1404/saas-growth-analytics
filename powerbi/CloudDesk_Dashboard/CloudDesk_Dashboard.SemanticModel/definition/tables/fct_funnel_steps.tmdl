@@ -1,0 +1,58 @@
+table fct_funnel_steps
+	lineageTag: 017376eb-a0d0-4748-b369-25ff8b477f64
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ffe96e6f-6cab-4b62-ae82-6fc04a8f24c5
+		summarizeBy: none
+		sourceColumn: account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column step_order
+		dataType: int64
+		formatString: 0
+		lineageTag: d3e66613-9d06-43d5-9cea-d73edc03eb25
+		summarizeBy: sum
+		sourceColumn: step_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column step_name
+		dataType: string
+		lineageTag: 7a4a846b-870c-4afa-873e-ca2c54b43789
+		summarizeBy: none
+		sourceColumn: step_name
+		sortByColumn: step_order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column reached_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e7cf0a09-6ba8-41b6-875a-0e8f553971ce
+		summarizeBy: none
+		sourceColumn: reached_at
+
+		variation Variation
+			isDefault
+			relationship: 0a4bf02d-4728-41c0-80e8-b7b419937ba0
+			defaultHierarchy: LocalDateTable_3eb7efd1-9449-4943-b72d-26a0c4184359.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fct_funnel_steps = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fct_funnel_steps.parquet"))
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

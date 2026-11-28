@@ -1,0 +1,183 @@
+table churn_scores
+	lineageTag: e8c0419e-8b49-4df6-9460-ada2bedf522a
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c6a59cd4-2e6d-4dda-9a86-bb4d9fedd76e
+		summarizeBy: none
+		sourceColumn: account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column scored_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f3b50983-9e12-4b89-8a4f-2d76ad644bf3
+		summarizeBy: none
+		sourceColumn: scored_at
+
+		variation Variation
+			isDefault
+			relationship: 5927481a-b489-483d-9900-b450a769d720
+			defaultHierarchy: LocalDateTable_09d4a749-ed1e-4ddb-8801-ee9f49eeed36.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column plan_name
+		dataType: string
+		lineageTag: 45cab47c-7c03-49b8-beb7-c66ddff2d54c
+		summarizeBy: none
+		sourceColumn: plan_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column mrr
+		dataType: double
+		lineageTag: a97adaf9-1453-4db6-99a4-9355832bdc66
+		summarizeBy: sum
+		sourceColumn: mrr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column company_size
+		dataType: string
+		lineageTag: 840dc644-47d3-4830-8f27-aed0f2bba2e1
+		summarizeBy: none
+		sourceColumn: company_size
+
+		annotation SummarizationSetBy = Automatic
+
+	column acquisition_channel
+		dataType: string
+		lineageTag: 0d7751d8-7742-4cb0-b134-e5a60a964661
+		summarizeBy: none
+		sourceColumn: acquisition_channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: e4572068-5089-497c-a9b1-b5b769470765
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_months
+		dataType: int64
+		formatString: 0
+		lineageTag: d37d37e0-4e27-4cbd-9fb9-c2b5254b09a9
+		summarizeBy: sum
+		sourceColumn: tenure_months
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions_per_seat_3m
+		dataType: double
+		lineageTag: a94c48db-6730-4db9-8743-1150c30923c6
+		summarizeBy: sum
+		sourceColumn: sessions_per_seat_3m
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column usage_trend
+		dataType: double
+		lineageTag: 25006438-78f6-4435-b53e-37e4e193bdd9
+		summarizeBy: sum
+		sourceColumn: usage_trend
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column failed_attempts_90d
+		dataType: int64
+		formatString: 0
+		lineageTag: 55054e6f-201e-4f65-b929-5779b4cb981c
+		summarizeBy: sum
+		sourceColumn: failed_attempts_90d
+
+		annotation SummarizationSetBy = Automatic
+
+	column tickets_90d
+		dataType: int64
+		formatString: 0
+		lineageTag: 192ba1d3-5b18-400e-9325-00b856351f30
+		summarizeBy: sum
+		sourceColumn: tickets_90d
+
+		annotation SummarizationSetBy = Automatic
+
+	column churn_probability
+		dataType: double
+		lineageTag: dc4ee60f-6f83-43f1-ad84-fac57b55ae85
+		summarizeBy: sum
+		sourceColumn: churn_probability
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column risk_tier
+		dataType: string
+		lineageTag: 425a498a-f09b-4ad9-879e-3b522f56653e
+		summarizeBy: none
+		sourceColumn: risk_tier
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_mrr_loss
+		dataType: double
+		lineageTag: 62b11b0c-1110-463e-b60a-a9412d8ff88d
+		summarizeBy: sum
+		sourceColumn: expected_mrr_loss
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column risk_reasons
+		dataType: string
+		lineageTag: 28f91d01-ead4-42b9-beca-e2c6949e6d74
+		summarizeBy: none
+		sourceColumn: risk_reasons
+
+		annotation SummarizationSetBy = Automatic
+
+	column recommended_action
+		dataType: string
+		lineageTag: 78dbbbe1-65ab-49ca-8c35-6f013a9c0723
+		summarizeBy: none
+		sourceColumn: recommended_action
+
+		annotation SummarizationSetBy = Automatic
+
+	column probability_bin
+		dataType: double
+		lineageTag: aa9facff-31f4-4fa8-8ec7-88bc61005b48
+		summarizeBy: sum
+		sourceColumn: probability_bin
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition churn_scores = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "churn_scores.parquet")),
+				    #"Added Custom" = Table.AddColumn(Source, "probability_bin", each Number.RoundDown([churn_probability] * 50) / 50),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Custom",{{"probability_bin", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
